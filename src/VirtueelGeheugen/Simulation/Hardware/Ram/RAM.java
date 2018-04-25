@@ -7,7 +7,25 @@ import VirtueelGeheugen.Interfaces.ProcessRAMInterface;
 import VirtueelGeheugen.Simulation.Process;
 
 /**
- * Simulatie van het ram geheugen.
+ * <pre>
+ * Model for the RAM.
+ *
+ * contains:
+ * </pre>
+ * <ul>
+ *     <li>
+ *         The maximum amount of frames allowed in the RAM at once.
+ *     </li>
+ *     <li>
+ *         The maximum amount of processes allowed in he RAM at once.
+ *     </li>
+ *     <li>
+ *         An array representing which frames are currently taken.
+ *     </li>
+ *     <li>
+ *         A PriorityQueue of processes currently in RAM, keeping the LRU process at the front.
+ *     </li>
+ * </ul>
  */
 
 public class RAM {
@@ -28,32 +46,40 @@ public class RAM {
 //======================================================================================================================
     //class specs
 
-    private final int FRAME_COUNT = 12;
+    private final static int FRAME_COUNT = 12;
+    private final static int MAX_PROCESSES = 4;
     private boolean[] frames = new boolean[FRAME_COUNT];
-    private PriorityQueue<Process> processes;
-
+    private PriorityQueue<Process> processList;
 
     public RAM(){
-        this.processes = new PriorityQueue<>(new LRUProcess());
+        this.processList = new PriorityQueue<>(new LRUProcess());
     }
 //======================================================================================================================
     //public functions
 
     /**
+     * Called when a write operation occurs.
      *
-     * @param process    Process on which the
-     * @param address
-     * @param accessTime
+     * @param process    Process on which the the operation is called.
+     * @param address    Address of the operation.
+     * @param accessTime Current clock time.
      */
     public void write(Process process, int address, int accessTime){
 
-        if(!this.processes.contains(process)) this.addProcess(process, address, accessTime);
+        if(!this.processList.contains(process)) this.addProcess(process, address, accessTime);
         process.write(address);
     }
 
+    /**
+     * Called when a read operation occurs.
+     *
+     * @param process    Process on which the the operation is called.
+     * @param address    Address of the operation.
+     * @param accessTime Current clock time.
+     */
     public void read(Process process, int address, int accessTime){
 
-        if(!this.processes.contains(process)) this.addProcess(process, address, accessTime);
+        if(!this.processList.contains(process)) this.addProcess(process, address, accessTime);
     }
 
     /**
@@ -63,7 +89,7 @@ public class RAM {
      */
     public void terminate(Process process){
 
-        if(processes.contains(process)) processes.remove(process);
+        if(processList.contains(process)) processList.remove(process);
     }
 
     /**
@@ -82,7 +108,7 @@ public class RAM {
 
     public void addProcess(Process process, int address, int accessTime){
 
-        processes.add(process);
+        processList.add(process);
         scalePages(address, accessTime);
     }
 
@@ -125,7 +151,7 @@ public class RAM {
      * </p>
      *
      * <p>
-     *     When more than 4 processes are in RAM, the LRU process will be removed.
+     *     When more than 4 processList are in RAM, the LRU process will be removed.
      * </p>
      *
      * @param address    First page to be put in RAM.
@@ -133,15 +159,15 @@ public class RAM {
      */
     private void scalePages(int address, int accessTime){
 
-        //4 being the maximum number of processes that can be in RAM.
-        if (processes.size() > 4){
-            Process process = processes.poll();
+        //4 being the maximum number of processList that can be in RAM.
+        if (processList.size() > MAX_PROCESSES){
+            Process process = processList.poll();
             process.removeAllPagesFromRAM();
         }
 
-        for (Process RAMProcess: processes) {
+        for (Process RAMProcess: processList) {
             RAMProcess.setProcessRAMInterface(processToRAMInterface);
-            RAMProcess.scalePagesToFit(FRAME_COUNT / processes.size(), address, accessTime);
+            RAMProcess.scalePagesToFit(FRAME_COUNT / processList.size(), address, accessTime);
         }
     }
 //======================================================================================================================

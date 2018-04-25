@@ -40,6 +40,7 @@ public class PageTable extends ArrayList<PageTableEntry> {
 
     /**
      * Remove the LRU page and returns this page to extract information.
+     *
      * @return The entry that was removed.
      */
     public PageTableEntry removeLRU(){
@@ -58,26 +59,29 @@ public class PageTable extends ArrayList<PageTableEntry> {
      * <p>
      *     Method that will add a certain page to RAM by setting:
      * </p>
-     *     <ul>
-     *         <li>
-     *             The present bit to 1 (true).
-     *         </li>
-     *         <li>
-     *             The modified but to 0 (false).
-     *         </li>
-     *         <li>
-     *             The last accessed time to the current clock time.
-     *         </li>
-     *         <li>
-     *             The frame number given by the RAM.
-     *         </li>
-     *     </ul>
+     * <ul>
+     *     <li>
+     *         The present bit to 1 (true).
+     *     </li>
+     *     <li>
+     *         The modified but to 0 (false).
+     *     </li>
+     *     <li>
+     *         The last accessed time to the current clock time.
+     *     </li>
+     *     <li>
+     *         The frame number given by the RAM.
+     *     </li>
+     * </ul>
      *
-     * @param entry Specified page.
+     * @param entry      Specified page.
+     * @param frame      The frame number where the page will be held.
+     * @param accessTime The current clock time.
+     *
      */
-    public void addToRAM(int entry, int frame, int accesTime){
+    public void addToRAM(int entry, int frame, int accessTime){
 
-        this.get(entry).addToRAM(frame, accesTime);
+        this.get(entry).addToRAM(frame, accessTime);
     }
 
     /**

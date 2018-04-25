@@ -56,6 +56,28 @@ public class PageTableEntry {
 //======================================================================================================================
     //public methods
 
+    /**
+     * <p>
+     *     When a page is added to RAM, do:
+     * </p>
+     * <ul>
+     *     <li>
+     *         Set the present bit to 1 (true).
+     *     </li>
+     *     <li>
+     *         Set the modified bit to 0 (false).
+     *     </li>
+     *     <li>
+     *         Set the last access time to the current clock time.
+     *     </li>
+     *     <li>
+     *         Set the frame number to the specified frame number.
+     *     </li>
+     * </ul>
+     *
+     * @param frame      The frame number in which the page will be placed.
+     * @param accessTime The current clock time.
+     */
     public void addToRAM(int frame, int accessTime){
         this.present = true;
         this.modified = false;

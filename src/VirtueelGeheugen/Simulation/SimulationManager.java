@@ -1,6 +1,5 @@
 package VirtueelGeheugen.Simulation;
 
-
 import VirtueelGeheugen.DataProcessing.Containers.InstructionInfo;
 import VirtueelGeheugen.DataProcessing.Containers.InstructionList;
 import VirtueelGeheugen.MainWindowViewController;
@@ -33,7 +32,7 @@ public class SimulationManager {
         this.options.put("Start", (instructionInfo) -> {
 
             processList.add(instructionInfo.getProcessId(), new Process(instructionInfo.getProcessId()));
-            ram.addProcess(processList.get(instructionInfo.getProcessId()), getCurrentTime());
+            ram.addProcess(processList.get(instructionInfo.getProcessId()), getCurrentTime(), getCurrentTime());
 
             return null;
         });
@@ -47,13 +46,13 @@ public class SimulationManager {
         });
         this.options.put("Read", (instructionInfo) -> {
 
-            ram.read(processList.get(instructionInfo.getProcessId()), instructionInfo.getVirtualAdressValue());
+            ram.read(processList.get(instructionInfo.getProcessId()), instructionInfo.getVirtualAdressValue(), getCurrentTime());
 
             return null;
         });
         this.options.put("Write", (instructionInfo) -> {
 
-            ram.write(processList.get(instructionInfo.getProcessId()), instructionInfo.getVirtualAdressValue());
+            ram.write(processList.get(instructionInfo.getProcessId()), instructionInfo.getVirtualAdressValue(), getCurrentTime());
 
             return null;
         });
@@ -88,7 +87,7 @@ public class SimulationManager {
     public void runStep(){
 
         InstructionInfo instruction = instructionList.removeFirst();
-         options.get(instruction.getOperation()).apply(instruction);
+        options.get(instruction.getOperation()).apply(instruction);
         currentTime++;
     }
 }

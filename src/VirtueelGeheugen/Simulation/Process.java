@@ -4,6 +4,33 @@ import VirtueelGeheugen.Interfaces.ProcessRAMInterface;
 import VirtueelGeheugen.Simulation.Hardware.PageTable.PageTable;
 import VirtueelGeheugen.Simulation.Hardware.PageTable.PageTableEntry;
 
+/**
+ * <pre>
+ *     A model representing a process. Each process is assumed to be able to have 16 pages and will get a page table
+ *     to facilitate 16 pages.
+ *
+ *     Each process contains.
+ * </pre>
+ *
+ * <ul>
+ *     <li>
+ *         The id of the process.
+ *     </li>
+ *     <li>
+ *         A page table.
+ *     </li>
+ *     <li>
+ *         An interface connecting the process back to the RAM.
+ *     </li>
+ *     <li>
+ *         The amount of times the process has written a page to the RAM.
+ *     </li>
+ *     <li>
+ *         The amount of time a process has written back pages to the persistence memory.
+ *     </li>
+ * </ul>
+ */
+
 public class Process {
 //======================================================================================================================
     //class specs
@@ -181,9 +208,9 @@ public class Process {
     }
 
     /**
-     * TODO
+     * Call when a write operation occurs.
      *
-     * @param address
+     * @param address Addreess to be written to.
      */
     public void write(int address){
 
