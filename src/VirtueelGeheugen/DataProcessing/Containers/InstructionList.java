@@ -14,18 +14,4 @@ public class InstructionList extends LinkedList<InstructionInfo> {
             this.add(new InstructionInfo(instructionInfo));
         }
     }
-
-
-    //TODO make calculations mean work
-
-    public Double getMeanTurnAroundTime() {
-
-        return null;
-    }
-
-    public Double getMeanWaitTime() {
-
-        return null;
-    }
-
 }

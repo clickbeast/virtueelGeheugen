@@ -1,5 +1,7 @@
 package VirtueelGeheugen;
 
+import VirtueelGeheugen.DataProcessing.Containers.InstructionList;
+import VirtueelGeheugen.DataProcessing.Processing.XMLProcessor;
 import VirtueelGeheugen.Simulation.SimulationManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -38,7 +40,7 @@ public class Main extends Application {
             }
         });
 
-
+/*
         Parent flowPane = loader.load();
 
         primaryStage.setTitle("Scheduler");
@@ -48,7 +50,8 @@ public class Main extends Application {
         this.simulationManager.setMainWindowController(mainwindow);
         mainwindow.scene = primaryStage.getScene();
         this.mainwindow.startFinished();
-
+*/
+        InstructionList list = (new XMLProcessor().generateProcessListBasedOnXML("Instructions_30_3.xml"));
 
         /**
          *
