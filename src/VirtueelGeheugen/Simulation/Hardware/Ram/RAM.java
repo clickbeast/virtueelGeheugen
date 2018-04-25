@@ -1,5 +1,6 @@
 package VirtueelGeheugen.Simulation.Hardware.Ram;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
@@ -20,7 +21,7 @@ import VirtueelGeheugen.Simulation.Process;
  *         The maximum amount of processes allowed in he RAM at once.
  *     </li>
  *     <li>
- *         An array representing which frames are currently taken.
+ *         A list of Frame objects.
  *     </li>
  *     <li>
  *         A PriorityQueue of processes currently in RAM, keeping the LRU process at the front.
@@ -34,8 +35,8 @@ public class RAM {
 
     private ProcessRAMInterface processToRAMInterface = new ProcessRAMInterface() {
         @Override
-        public int add() {
-            return RAM.this.addPage();
+        public int add(Process process, int pageNumber) {
+            return RAM.this.addPage(process, pageNumber);
         }
 
         @Override
@@ -48,11 +49,18 @@ public class RAM {
 
     private final static int FRAME_COUNT = 12;
     private final static int MAX_PROCESSES = 4;
-    private boolean[] frames = new boolean[FRAME_COUNT];
+    private ArrayList<Frame> frames;
     private PriorityQueue<Process> processList;
 
     public RAM(){
         this.processList = new PriorityQueue<>(new LRUProcess());
+        this.frames = new ArrayList<>(FRAME_COUNT);
+
+        //Safety: set all Frames to default.
+        for(int i = 0; i < FRAME_COUNT; i++){
+
+            frames.add(i, new Frame());
+        }
     }
 //======================================================================================================================
     //public functions
@@ -114,17 +122,19 @@ public class RAM {
 
     /**
      * <p>
-     *     Method to set a certain frame as taken, also sets the frame as taken.
+     *     Method to set the information of a certain frame.
      * </p>
      *
-     * @return The frame number now taken.
+     * @param process    The process reference to be added to the Frame.
+     * @param pageNumber The page number of the page being added.
+     * @return           The frame number now taken.
      */
-    private int addPage(){
+    private int addPage(Process process, int pageNumber){
 
         for(int i = 0; i < FRAME_COUNT; i++){
 
-            if(!frames[i]){
-                frames[i] = true;
+            if(!frames.get(i).isTaken()){
+                frames.get(i).fillPage(process, pageNumber);
                 return i;
             }
         }
@@ -141,7 +151,9 @@ public class RAM {
     private void removePage(int frame){
 
         //Safety to prevent index bounds violoation
-        if(frame > -1 && frame < FRAME_COUNT) frames[frame] = false;
+        if(frame > -1 && frame < FRAME_COUNT){
+            frames.get(frame).emptyPage();
+        }
     }
 
     /**
