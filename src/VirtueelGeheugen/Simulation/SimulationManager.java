@@ -45,19 +45,16 @@ public class SimulationManager {
 
             process.removeAllPagesFromRAM();
             ram.terminate(process);
-
             return null;
         });
         this.options.put("Read", (instructionInfo) -> {
 
             ram.read(processList.get(instructionInfo.getProcessId()), instructionInfo.getVirtualAdressValue(), getCurrentTime());
-
             return null;
         });
         this.options.put("Write", (instructionInfo) -> {
 
             ram.write(processList.get(instructionInfo.getProcessId()), instructionInfo.getVirtualAdressValue(), getCurrentTime());
-
             return null;
         });
     }

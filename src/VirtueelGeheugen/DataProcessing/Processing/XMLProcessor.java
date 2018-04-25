@@ -10,6 +10,7 @@ import VirtueelGeheugen.DataProcessing.Containers.InstructionList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.nio.file.Paths;
 
 /*
     Main task: Process a supplied xml document and generate an approptiate list of process Objects that can be handled later
@@ -29,7 +30,8 @@ public class XMLProcessor {
         //read the xml file
         try {
 
-            File file = new File(fileName);
+            String path = System.getProperty("user.dir");
+            File file = new File(path + File.separator + "src", fileName);
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document doc = documentBuilder.parse(file);
@@ -40,10 +42,10 @@ public class XMLProcessor {
             for(int i = 0; i < list.getLength(); i++){
                 //aanpassen
                 //TODO CHECK
-                String operation = list.item(i).getChildNodes().item(1).getTextContent();
-                String adress = list.item(i).getChildNodes().item(3).getTextContent();
-                String id = list.item(i).getChildNodes().item(5).getTextContent();
-                instructionList.add(new InstructionInfo(operation,Integer.parseInt(adress),Integer.parseInt(id)));
+                String id = list.item(i).getChildNodes().item(1).getTextContent();
+                String operation = list.item(i).getChildNodes().item(3).getTextContent();
+                String address = list.item(i).getChildNodes().item(5).getTextContent();
+                instructionList.add(new InstructionInfo(operation,Integer.parseInt(address),Integer.parseInt(id)));
             }
 
             System.out.println("XML file Generated");
