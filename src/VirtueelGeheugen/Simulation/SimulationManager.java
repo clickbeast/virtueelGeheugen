@@ -15,7 +15,6 @@ public class SimulationManager {
 
     private MainWindowViewController mainWindowController;
 
-
     private InstructionList instructionList;
     private ArrayList<Process> processList;
 
@@ -29,8 +28,7 @@ public class SimulationManager {
         this.processList = new ArrayList<>();
         this.ram = new RAM();
 
-
-        //HashMap to be more efficient than if-then-else.
+        //HashMap to be a little bit more efficient compared to if-then-else.
         this.options = new HashMap<>();
         this.options.put("Start", (instructionInfo) -> {
 
@@ -42,6 +40,9 @@ public class SimulationManager {
         this.options.put("Terminate", (instructionInfo) -> {
 
             Process process = processList.remove(instructionInfo.getProcessId());
+
+            //TODO return removed process to be displayed.
+
             process.removeAllPagesFromRAM();
             ram.terminate(process);
 
@@ -93,6 +94,4 @@ public class SimulationManager {
         options.get(instruction.getOperation()).apply(instruction);
         currentTime++;
     }
-
-
 }
