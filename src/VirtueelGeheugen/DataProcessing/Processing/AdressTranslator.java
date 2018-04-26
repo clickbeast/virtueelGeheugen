@@ -6,4 +6,8 @@ package VirtueelGeheugen.DataProcessing.Processing;
 public class AdressTranslator {
 
     //TODO creer adress translator
+
+
+
+
 }

@@ -1,8 +1,9 @@
-package VirtueelGeheugen;
+package VirtueelGeheugen.UserInterface;
 
 import VirtueelGeheugen.DataProcessing.Containers.InstructionInfo;
 import VirtueelGeheugen.Simulation.Hardware.PageTable.PageTable;
 import VirtueelGeheugen.Simulation.Process;
+import VirtueelGeheugen.Simulation.SimulationManager;
 import VirtueelGeheugen.Simulation.SimulationState;
 
 //keeps the text data that is or was on screen.
@@ -35,11 +36,36 @@ public class UIState {
 //    }
 
     public UIState(SimulationState simulationState) {
-        //fill and calculate
+        //fill and calculate what's needed
+
+
 
     }
 
+    //TODO could be moved to simulationManager eventueel
 
+
+    private int calculateTotalAmountOfWritesToRam(SimulationManager simulationManager) {
+        System.out.println("Calculating total amounts of writes to ram");
+        int count = 0;
+
+//        //TODO
+//        for(Process process: null)  {
+//
+//
+//        }
+
+        return count;
+    }
+
+    private int calculateTotalAmountOfWritesToPercistent(SimulationManager simulationManager) {
+
+        System.out.println("Calculating total amounts of writes to percistent");
+        int count = 0;
+
+
+        return count;
+    }
 
     //
     // GETTERS

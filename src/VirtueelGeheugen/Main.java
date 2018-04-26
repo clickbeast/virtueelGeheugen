@@ -19,6 +19,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
 
+        this.simulationManager = new SimulationManager();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("main.fxml"));
 
@@ -41,9 +42,9 @@ public class Main extends Application {
 
         Parent flowPane = loader.load();
 
-        primaryStage.setTitle("Scheduler");
+        primaryStage.setTitle("Memory Simulator");
         //primaryStage.setResizable(false);
-        primaryStage.setScene(new Scene(flowPane, 1000, 700));
+        primaryStage.setScene(new Scene(flowPane, 1000, 750));
         primaryStage.show();
         this.simulationManager.setMainWindowController(mainwindow);
         mainwindow.scene = primaryStage.getScene();
@@ -54,6 +55,9 @@ public class Main extends Application {
          *
          *  RUN YOUR TESTS BELOW THIS , COMMENT  ABOVE CODE WHEN NO NEED FOR History (temp)
          */
+
+
+
 
     }
 
