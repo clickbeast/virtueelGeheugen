@@ -14,6 +14,8 @@ public class SimulationManager {
     //class specs
 
     private MainWindowViewController mainWindowController;
+
+
     private InstructionList instructionList;
     private ArrayList<Process> processList;
 
@@ -26,6 +28,7 @@ public class SimulationManager {
         this.instructionList = new InstructionList();
         this.processList = new ArrayList<>();
         this.ram = new RAM();
+
 
         //HashMap to be more efficient than if-then-else.
         this.options = new HashMap<>();
