@@ -14,7 +14,6 @@ public class SimulationManager {
     //class specs
 
     private MainWindowViewController mainWindowController;
-
     private InstructionList instructionList;
     private ArrayList<Process> processList;
 
@@ -64,10 +63,6 @@ public class SimulationManager {
     public void setMainWindowController(MainWindowViewController mainWindowController) {
         this.mainWindowController = mainWindowController;
     }
-
-    public void setDelay(int delay) {
-        this.delay = delay;
-    }
 //======================================================================================================================
     //getters
 
@@ -75,9 +70,6 @@ public class SimulationManager {
         return currentTime;
     }
 
-    public int getDelay() {
-        return delay;
-    }
 //======================================================================================================================
     //private functions
 //======================================================================================================================
@@ -89,16 +81,6 @@ public class SimulationManager {
     public void runComplete(){
 
         while(!instructionList.isEmpty()) runStep();
-    }
-
-    /**
-     * Method to run the simulation to completion on a timer.
-     *
-     * @param millis The delay for the simulation.
-     */
-    public void runOnTimer(int millis){
-
-        //TODO set to pause on negative!
     }
 
     /**

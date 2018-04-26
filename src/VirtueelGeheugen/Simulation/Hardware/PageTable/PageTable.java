@@ -19,7 +19,6 @@ public class PageTable extends ArrayList<PageTableEntry> {
     //public methods
 
     public int getLastUsed(){
-
         int max = 0;
         for(PageTableEntry pageTableEntry: this){
 
