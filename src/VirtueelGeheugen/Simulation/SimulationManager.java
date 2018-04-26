@@ -93,4 +93,6 @@ public class SimulationManager {
         options.get(instruction.getOperation()).apply(instruction);
         currentTime++;
     }
+
+
 }

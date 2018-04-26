@@ -52,7 +52,7 @@ public class Main extends Application {
 
         /**
          *
-         *  RUN YOUR TESTS BELOW THIS , COMMENT  ABOVE CODE WHEN NO NEED FOR UI (temp)
+         *  RUN YOUR TESTS BELOW THIS , COMMENT  ABOVE CODE WHEN NO NEED FOR History (temp)
          */
 
     }
