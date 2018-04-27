@@ -9,6 +9,7 @@ import VirtueelGeheugen.Simulation.Hardware.Ram.RAM;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.NoSuchElementException;
 import java.util.function.Function;
 
 public class SimulationManager {
@@ -111,6 +112,14 @@ public class SimulationManager {
 //======================================================================================================================
     //public functions
 
+    public void runDemandPaging(){
+        ram.setPrePaging(false);
+    }
+
+    public void runPrePaging(){
+        ram.setPrePaging(true);
+    }
+
     /**
      * Run entire XML file at once and display results at the end.
      */
@@ -127,25 +136,27 @@ public class SimulationManager {
      */
     public SimulationState runStep(){
 
-        InstructionInfo instruction = instructionList.removeFirst();
-        if(instruction.getOperation().equals("Terminate")) {
-            print(instruction);
-        }
-        options.get(instruction.getOperation()).apply(instruction);
+        try {
+            InstructionInfo instruction = instructionList.removeFirst();
+            options.get(instruction.getOperation()).apply(instruction);
 
-        if(instruction.getOperation().equals("Terminate")) {
             print(instruction);
+            currentTime++;
+            return new SimulationState(
+                    instruction,
+                    processList.get(instruction.getProcessId()),
+                    removedProcess,
+                    ram.getFrames(),
+                    getCurrentTime(),
+                    writesToRAM,
+                    writesToPersistent
+            );
+        } catch (NoSuchElementException e){
+            System.out.println("=========================================");
+            System.out.println(writesToRAM);
+            System.out.println(writesToPersistent);
+            return null;
         }
-        currentTime++;
-        return new SimulationState(
-                instruction,
-                processList.get(instruction.getProcessId()),
-                removedProcess,
-                ram.getFrames(),
-                getCurrentTime(),
-                writesToRAM,
-                writesToPersistent
-        );
     }
 //======================================================================================================================
     //debug //TODO remove

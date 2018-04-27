@@ -5,8 +5,6 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 
 import VirtueelGeheugen.Interfaces.ProcessRAMInterface;
-import VirtueelGeheugen.Interfaces.SimulationInterface;
-import VirtueelGeheugen.Simulation.Hardware.PageTable.PageTable;
 import VirtueelGeheugen.Simulation.Process;
 
 /**
@@ -58,10 +56,12 @@ public class RAM {
     private final static int MAX_PROCESSES = 4;
     private ArrayList<Frame> frames;
     private PriorityQueue<Process> processList;
+    private boolean prePaging;
 
     public RAM(){
         this.processList = new PriorityQueue<>(new LRUProcess());
         this.frames = new ArrayList<>(FRAME_COUNT);
+        this.prePaging = true;
 
         //Safety: set all Frames to default.
         for(int i = 0; i < FRAME_COUNT; i++){
@@ -71,6 +71,11 @@ public class RAM {
     }
 //======================================================================================================================
     //setter
+
+    public void setPrePaging(boolean prePaging) {
+        this.prePaging = prePaging;
+    }
+
 //======================================================================================================================
     //getters
 
@@ -96,8 +101,9 @@ public class RAM {
 
         Process removedProcess = null;
         if(!this.processList.contains(process)) removedProcess = this.addProcess(process, address, accessTime);
-        if(process.getPageTable().getCurrentlyInRAM() == 0){
-            process.scalePagesToFit(FRAME_COUNT / processList.size(), address, accessTime);
+        if(process.getPageTable().getCurrentlyInRAM() == 0 && prePaging){
+            process.setLimit(FRAME_COUNT / processList.size());
+            process.scalePagesToFit(address, accessTime);
         }
         process.write(address, accessTime);
         return removedProcess;
@@ -114,8 +120,9 @@ public class RAM {
 
         Process removedProcess = null;
         if(!this.processList.contains(process)) removedProcess = this.addProcess(process, address, accessTime);
-        if(process.getPageTable().getCurrentlyInRAM() == 0){
-            process.scalePagesToFit(FRAME_COUNT / processList.size(), address, accessTime);
+        if(process.getPageTable().getCurrentlyInRAM() == 0 && prePaging){
+            process.setLimit(FRAME_COUNT / processList.size());
+            process.scalePagesToFit(address, accessTime);
         }
         process.read(address, accessTime);
         return removedProcess;
@@ -130,7 +137,8 @@ public class RAM {
 
         if(processList.contains(process)) processList.remove(process);
         for(Process RAMProcess: processList){
-            RAMProcess.scalePagesToFit(FRAME_COUNT / processList.size(), -1, accessTime);
+            RAMProcess.setLimit(FRAME_COUNT / processList.size());
+            RAMProcess.scalePagesToFit(-1, accessTime);
         }
     }
 
@@ -160,9 +168,13 @@ public class RAM {
 
         //add process
         processList.add(process);
-        for (Process RAMProcess: processList) {
-            if(RAMProcess != process) {
-                RAMProcess.scalePagesToFit(FRAME_COUNT / processList.size(), -1, accessTime);
+        process.setLimit(FRAME_COUNT / processList.size());
+        if(prePaging) {
+            for (Process RAMProcess : processList) {
+                if (RAMProcess != process) {
+                    RAMProcess.setLimit(FRAME_COUNT / processList.size());
+                    RAMProcess.scalePagesToFit(-1, accessTime);
+                }
             }
         }
 

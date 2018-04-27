@@ -236,15 +236,13 @@ public class Process {
      *     If a page is newly added to the RAM, the time it was last accessed is set to the current clock time.
      * </p>
      *
-     * @param limit      The amount of pages allowed.
      * @param address    The address in the first page that has to be put in RAM.
      * @param accessTime The current time of the clock.
      */
 
-    public void scalePagesToFit(int limit, int address, int accessTime){
+    public void scalePagesToFit(int address, int accessTime){
 
         int present = pageTable.getCurrentlyInRAM();
-        this.limit = limit;
 
         int page;
         if(address != -1) page = translateAddressToPage(address);
