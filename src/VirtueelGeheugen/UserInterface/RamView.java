@@ -43,7 +43,7 @@ public class RamView extends ListView<HBox> {
     }
 
     private void addPlaceHolderCell() {
-        this.addCellWithData(new RamTableData("Frame Id","Process Id"));
+        this.addCellWithData(new RamTableData("Page Id","Process Id"));
     }
 
     private void addCellWithData(RamTableData ramTableData) {

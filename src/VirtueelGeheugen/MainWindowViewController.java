@@ -261,10 +261,6 @@ public class MainWindowViewController implements Initializable {
         this.unFreezeUI();
 
 
-//        if(simulationState == null) {
-//            this.executeNextInstructionButton.setDisable(true);
-//        }
-
     }
 
     //Runs each instruction
@@ -287,7 +283,7 @@ public class MainWindowViewController implements Initializable {
 
             //EXECUTION
 
-            SimulationState simulationState = null;
+            SimulationState simulationState = this.simulationManager.runStep();
 
 
             if(simulationState != null) {
@@ -298,7 +294,7 @@ public class MainWindowViewController implements Initializable {
 
 
                 while (simulationState != null) {
-                    simulationState = null;
+                    simulationState = this.simulationManager.runStep();
                     this.historyManager.addNewState(new UIState(simulationState));
                 }
 
@@ -340,8 +336,15 @@ public class MainWindowViewController implements Initializable {
 
         //Load in XML DOC
         System.out.println("Loading XML Document");
-        simulationManager.setInstructionList(new XMLProcessor().generateProcessListBasedOnXML("Instructions_20000_20.xml"));
 
+
+        //TODO aan te passen
+        switch (this.choiceBox.getSelectionModel().getSelectedIndex()) {
+
+            case 0: simulationManager.setInstructionList(new XMLProcessor().generateProcessListBasedOnXML("Instructions_30_3.xml"));
+            case 1: simulationManager.setInstructionList(new XMLProcessor().generateProcessListBasedOnXML("Instructions_30_3.xml"));
+            case 2:simulationManager.setInstructionList(new XMLProcessor().generateProcessListBasedOnXML("Instructions_30_3.xml"));
+        }
 
 
 

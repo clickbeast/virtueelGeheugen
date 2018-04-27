@@ -1,5 +1,7 @@
 package VirtueelGeheugen.UserInterface;
 
+import VirtueelGeheugen.Simulation.Hardware.PageTable.PageTableEntry;
+import VirtueelGeheugen.Simulation.Hardware.Ram.Frame;
 import VirtueelGeheugen.Simulation.SimulationManager;
 import VirtueelGeheugen.Simulation.SimulationState;
 import VirtueelGeheugen.UserInterface.ListObjects.PageTableData;
@@ -47,13 +49,59 @@ public class UIState {
         this.ramTableCells = new ArrayList<>();
 
         //Process simulation state
+        processSimulationState(simulationState);
     }
 
 
 
     public void processSimulationState(SimulationState simulationState) {
 
-        //TODO !!!
+        System.out.println("READING SIMULATION STATE");
+        System.out.println("- - - - - - -");
+
+        this.timerValue = simulationState.getClock();
+        this.totalAmountOfWritesToPercistent = simulationState.getWriteToPersistent();
+        this.totalAmountOfWritesToRam = simulationState.getWritesToRAM();
+
+
+        this.currentInstructionOperation = simulationState.getInstructionInfo().getOperation();
+        this.currentInstructionVirtualAdress = String.valueOf(simulationState.getInstructionInfo().getVirtualAdressValue());
+        this.currentInstructionPhysicalAdress = "Wher oh Where";
+
+        this.currentInstructionProcessId = simulationState.getInstructionInfo().getProcessId();
+        this.currentInsructionProcessNumberOfWritesToRam = simulationState.getProcessBeingExecuted().getWriteTos();
+        this.currentInstructionProcessNumberOfWritesToPercistent = simulationState.getProcessBeingExecuted().getWriteBacks();
+
+        //fill page table
+        for(PageTableEntry pageTableEntry:  simulationState.getProcessBeingExecuted().getPageTable()) {
+
+            String presentBit = String.valueOf(pageTableEntry.isPresent() ? 1 : 0);
+            String modifyBit = String.valueOf(pageTableEntry.isModified() ? 1 : 0);
+
+            this.pageTableCells.add(new PageTableData(
+                    presentBit
+                    ,modifyBit
+                    ,String.valueOf(pageTableEntry.getLastAccessTime())
+                    ,String.valueOf(pageTableEntry.getFrameNumber())));
+        }
+
+
+        //fill ram table
+        for(Frame frame:  simulationState.getFrames()) {
+
+            if(frame.getProcess() != null) {
+                this.ramTableCells.add(new RamTableData(String.valueOf(frame.getPageNumber()), String.valueOf(frame.getProcess().getpId())));
+            }else{
+                this.ramTableCells.add(new RamTableData("Empty",""));
+            }
+        }
+
+        //fill previously executed
+
+        if(simulationState.getProcessLeavingRam() != null) {
+            this.lastProcessRemovedFromRamId = String.valueOf(simulationState.getProcessLeavingRam().getWriteTos());
+            this.lastProcessRemovedFromRamNumberOfWritesToPercistent = String.valueOf(simulationState.getProcessLeavingRam().getWriteBacks());
+        }
 
     }
 
