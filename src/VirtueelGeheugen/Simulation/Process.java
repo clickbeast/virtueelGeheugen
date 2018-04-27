@@ -1,8 +1,12 @@
 package VirtueelGeheugen.Simulation;
 
 import VirtueelGeheugen.Interfaces.ProcessRAMInterface;
+import VirtueelGeheugen.Interfaces.SimulationInterface;
 import VirtueelGeheugen.Simulation.Hardware.PageTable.PageTable;
 import VirtueelGeheugen.Simulation.Hardware.PageTable.PageTableEntry;
+import jdk.nashorn.internal.ir.annotations.Ignore;
+
+import static VirtueelGeheugen.Simulation.Hardware.PageTable.PageTable.translateAddressToPage;
 
 /**
  * <pre>
@@ -37,8 +41,10 @@ public class Process {
 
     private int pId;
     private PageTable pageTable;
+    private int limit;
 
     private ProcessRAMInterface processRAMInterface;
+    private SimulationInterface simulationInterface;
 
     private int writeTos;
     private int writeBacks;
@@ -72,7 +78,15 @@ public class Process {
     public int getWriteBacks() {
         return writeBacks;
     }
-//======================================================================================================================
+
+    public int getLimit() {
+        return limit;
+    }
+
+    public SimulationInterface getSimulationInterface() {
+        return simulationInterface;
+    }
+    //======================================================================================================================
     //setters
 
     public void setpId(int pId) {
@@ -94,6 +108,14 @@ public class Process {
     public void setWriteBacks(int writeBacks) {
         this.writeBacks = writeBacks;
     }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
+    public void setSimulationInterface(SimulationInterface simulationInterface) {
+        this.simulationInterface = simulationInterface;
+    }
 //======================================================================================================================
     //private functions
 
@@ -107,10 +129,15 @@ public class Process {
      */
     private void addPagesToMatch(int present, int pageCount, int address, int accessTime){
 
+        int page = translateAddressToPage(address);
+
         while (present < pageCount) {
 
-            addPage(address, accessTime);
+            addPage(page, accessTime);
             writeTos++;
+            simulationInterface.writeToRAM();
+            page++;
+            present++;
         }
     }
 
@@ -142,19 +169,37 @@ public class Process {
     private void removePage(){
 
         PageTableEntry entry = pageTable.removeLRU();
-        if(entry.isModified()) writeBacks++;
+        if(entry.isModified()){
+            writeBacks++;
+            simulationInterface.writeToPersistent();
+        }
+        entry.setPresent(false);
         processRAMInterface.remove(entry.getFrameNumber());
     }
 
     /**
      * Method to be called when adding to add a page.
      *
-     * @param address    The address of the instruction being called.
+     * @param page       the page number containing the address of the instruction being called.
      * @param accessTime The current clock time.
      */
-    private void addPage(int address, int accessTime){
+    private void addPage(int page, int accessTime){
 
-        pageTable.addToRAM(address, this, accessTime);
+        pageTable.addToRAM(page, this, accessTime);
+    }
+
+    private PageTableEntry accessPage(int address, int accessTime){
+
+        int page = translateAddressToPage(address);
+        PageTableEntry entry = pageTable.get(page);
+        if(!entry.isPresent()){
+            if(pageTable.getCurrentlyInRAM() >= limit){
+                removePage();
+            }
+            addPage(page, accessTime);
+        }
+        entry.setLastAccessTime(accessTime);
+        return entry;
     }
 //======================================================================================================================
     //public functions
@@ -185,23 +230,28 @@ public class Process {
      *     If a page is newly added to the RAM, the time it was last accessed is set to the current clock time.
      * </p>
      *
-     * @param pageCount  The amount of pages.
+     * @param limit      The amount of pages allowed.
      * @param address    The address in the first page that has to be put in RAM.
      * @param accessTime The current time of the clock.
      */
 
-    public void scalePagesToFit(int pageCount, int address, int accessTime){
+    public void scalePagesToFit(int limit, int address, int accessTime){
 
         int present = pageTable.getCurrentlyInRAM();
+        this.limit = limit;
+
+        int page;
+        if(address != -1) page = translateAddressToPage(address);
+        else page = this.pageTable.indexOf(this.pageTable.getLastUsedPage());
 
         //2 if tests to ignore this function if the amount is equal.
-        if (present >= pageCount) {
+        if (present >= limit) {
 
-            addPage(address, accessTime);
-            removePagesToMatch(present, pageCount);
-        } else if (present < pageCount){
+            //remove enough pages to make room for 1 more.
+            removePagesToMatch(present, limit);
+        } else if (present < limit){
 
-            addPagesToMatch(present, pageCount, address, accessTime);
+            addPagesToMatch(present, limit, page, accessTime);
         }
     }
 
@@ -210,16 +260,37 @@ public class Process {
      */
     public void removeAllPagesFromRAM(){
 
-        while (pageTable.getCurrentlyInRAM() > 0) removePage();
+        for(PageTableEntry entry: pageTable){
+            if(entry.isPresent()) {
+                processRAMInterface.remove(entry.getFrameNumber());
+                if (entry.isModified()){
+                    writeBacks++;
+                    simulationInterface.writeToPersistent();
+                }
+                entry.setPresent(false);
+            }
+        }
     }
 
     /**
      * Call when a write operation occurs.
      *
      * @param address Addreess to be written to.
+     * @param accessTime The current clock time.
      */
-    public void write(int address){
+    public void write(int address, int accessTime){
 
-        pageTable.setPageTableAsModified(address);
+        accessPage(address, accessTime).setModified(true);
+    }
+
+    /**
+     * Call when a read operation occurs.
+     *
+     * @param address Addreess to be read from.
+     * @param accessTime The current clock time.
+     */
+    public void read(int address, int accessTime){
+
+        accessPage(address, accessTime);
     }
 }

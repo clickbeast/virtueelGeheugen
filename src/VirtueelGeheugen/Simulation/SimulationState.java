@@ -1,8 +1,9 @@
 package VirtueelGeheugen.Simulation;
 
 import VirtueelGeheugen.DataProcessing.Containers.InstructionInfo;
-import VirtueelGeheugen.Simulation.Hardware.PageTable.PageTable;
+import VirtueelGeheugen.Simulation.Hardware.Ram.Frame;
 
+import java.util.ArrayList;
 
 
 /**
@@ -13,30 +14,53 @@ public class SimulationState {
 
 
     private InstructionInfo instructionInfo;
-    private PageTable pageTable;
     private Process processBeingExecuted;
     private Process processLeavingRam;
+    private ArrayList<Frame> frames;
+    private int clock;
+    private int writesToRAM;
+    private int writeToPersistent;
 
-
-    //reference to the simulationManagerItself
-    private SimulationManager simulationManager;
-
-
-    /**
-     *
-     * @param instructionInfo REQUIRED
-     * @param pageTable REQUIRED
-     * @param processBeingExecuted REQUIRED
-     * @param processLeavingRam    OPTIONAL
-     * @param simulationManager  REQUIRED
-     */
-    public SimulationState(InstructionInfo instructionInfo, PageTable pageTable, Process processBeingExecuted, Process processLeavingRam, SimulationManager simulationManager) {
+    public SimulationState(InstructionInfo instructionInfo, Process processBeingExecuted, Process processLeavingRam, ArrayList<Frame> frames, int clock, int writesToRAM, int writeToPersistent) {
         this.instructionInfo = instructionInfo;
-        this.pageTable = pageTable;
         this.processBeingExecuted = processBeingExecuted;
         this.processLeavingRam = processLeavingRam;
-        this.simulationManager = simulationManager;
+        this.frames = frames;
+        this.clock = clock;
+        this.writesToRAM = writesToRAM;
+        this.writeToPersistent = writeToPersistent;
+    }
+//======================================================================================================================
+    //getters
+
+    public InstructionInfo getInstructionInfo() {
+        return instructionInfo;
     }
 
+    public Process getProcessBeingExecuted() {
+        return processBeingExecuted;
+    }
 
+    public Process getProcessLeavingRam() {
+        return processLeavingRam;
+    }
+
+    public ArrayList<Frame> getFrames() {
+        return frames;
+    }
+
+    public int getClock() {
+        return clock;
+    }
+
+    public int getWritesToRAM() {
+        return writesToRAM;
+    }
+
+    public int getWriteToPersistent() {
+        return writeToPersistent;
+    }
+
+//======================================================================================================================
+    //setters
 }

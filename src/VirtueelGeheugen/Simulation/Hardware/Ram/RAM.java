@@ -5,6 +5,8 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 
 import VirtueelGeheugen.Interfaces.ProcessRAMInterface;
+import VirtueelGeheugen.Interfaces.SimulationInterface;
+import VirtueelGeheugen.Simulation.Hardware.PageTable.PageTable;
 import VirtueelGeheugen.Simulation.Process;
 
 /**
@@ -63,6 +65,19 @@ public class RAM {
         }
     }
 //======================================================================================================================
+    //setter
+//======================================================================================================================
+    //getters
+
+    public ProcessRAMInterface getProcessToRAMInterface() {
+        return processToRAMInterface;
+    }
+    public ArrayList<Frame> getFrames() {
+        return frames;
+    }
+
+
+//======================================================================================================================
     //public functions
 
     /**
@@ -72,10 +87,15 @@ public class RAM {
      * @param address    Address of the operation.
      * @param accessTime Current clock time.
      */
-    public void write(Process process, int address, int accessTime){
+    public Process write(Process process, int address, int accessTime){
 
-        if(!this.processList.contains(process)) this.addProcess(process, address, accessTime);
-        process.write(address);
+        Process removedProcess = null;
+        if(!this.processList.contains(process)) removedProcess = this.addProcess(process, address, accessTime);
+        if(process.getPageTable().getCurrentlyInRAM() == 0){
+            process.scalePagesToFit(FRAME_COUNT / processList.size(), address, accessTime);
+        }
+        process.write(address, accessTime);
+        return removedProcess;
     }
 
     /**
@@ -85,9 +105,15 @@ public class RAM {
      * @param address    Address of the operation.
      * @param accessTime Current clock time.
      */
-    public void read(Process process, int address, int accessTime){
+    public Process read(Process process, int address, int accessTime){
 
-        if(!this.processList.contains(process)) this.addProcess(process, address, accessTime);
+        Process removedProcess = null;
+        if(!this.processList.contains(process)) removedProcess = this.addProcess(process, address, accessTime);
+        if(process.getPageTable().getCurrentlyInRAM() == 0){
+            process.scalePagesToFit(FRAME_COUNT / processList.size(), address, accessTime);
+        }
+        process.read(address, accessTime);
+        return removedProcess;
     }
 
     /**
@@ -114,10 +140,25 @@ public class RAM {
      * @param accessTime The current time of the running simulation.
      */
 
-    public void addProcess(Process process, int address, int accessTime){
+    public Process addProcess(Process process, int address, int accessTime){
 
+        Process removedProcess = null;
+
+        //4 being the maximum number of processList that can be in RAM.
+        if (processList.size() >= MAX_PROCESSES){
+            removedProcess = processList.poll();
+            removedProcess.removeAllPagesFromRAM();
+        }
+
+        //add process
         processList.add(process);
-        scalePages(address, accessTime);
+        for (Process RAMProcess: processList) {
+            if(RAMProcess != process) {
+                RAMProcess.scalePagesToFit(FRAME_COUNT / processList.size(), -1, accessTime);
+            }
+        }
+
+        return removedProcess;
     }
 
     /**
@@ -153,33 +194,6 @@ public class RAM {
         //Safety to prevent index bounds violoation
         if(frame > -1 && frame < FRAME_COUNT){
             frames.get(frame).emptyPage();
-        }
-    }
-
-    /**
-     * <p>
-     *     Method to change the amount of pages currently in RAM for every process with pages in RAM. Use the specified
-     *     address to determine first page to be put in RAM.
-     * </p>
-     *
-     * <p>
-     *     When more than 4 processList are in RAM, the LRU process will be removed.
-     * </p>
-     *
-     * @param address    First page to be put in RAM.
-     * @param accessTime Time at which the RAM is accessed.
-     */
-    private void scalePages(int address, int accessTime){
-
-        //4 being the maximum number of processList that can be in RAM.
-        if (processList.size() > MAX_PROCESSES){
-            Process process = processList.poll();
-            process.removeAllPagesFromRAM();
-        }
-
-        for (Process RAMProcess: processList) {
-            RAMProcess.setProcessRAMInterface(processToRAMInterface);
-            RAMProcess.scalePagesToFit(FRAME_COUNT / processList.size(), address, accessTime);
         }
     }
 //======================================================================================================================

@@ -1,5 +1,6 @@
 package VirtueelGeheugen;
 
+import VirtueelGeheugen.DataProcessing.Processing.XMLProcessor;
 import VirtueelGeheugen.Simulation.Hardware.PageTable.PageTable;
 import VirtueelGeheugen.Simulation.SimulationManager;
 import VirtueelGeheugen.Simulation.SimulationState;
@@ -96,7 +97,7 @@ public class MainWindowViewController implements Initializable {
 
 
     private int currentSelectedXMLIndex = 0;
-
+    private String document;
 
 
 
@@ -107,7 +108,7 @@ public class MainWindowViewController implements Initializable {
 
         //Confiure Hisotry Manager
         this.historyManager = new HistoryManager();
-
+        document = "Instructions_30_3.xml";
 
     }
 
@@ -134,14 +135,17 @@ public class MainWindowViewController implements Initializable {
                         case 0:
                             System.out.println("0");
                             System.out.println("Preparing to load in new fxml -> generate warning");
+                            document = "Instructions_30_3.xml";
                             changeXMLWarning();
                             break;
                         case 1:
                             System.out.println("1");
+                            document = "Instructions_20000_4.xml";
                             changeXMLWarning();
                             break;
                         default:
                             System.out.println("2");
+                            document = "Instructions_20000_20.xml";
                             changeXMLWarning();
                             break;
                     }
@@ -239,7 +243,7 @@ public class MainWindowViewController implements Initializable {
         this.freezeUI();
 
         //get the new simulatoon state after instruction
-        SimulationState simulationState = null;
+        SimulationState simulationState = simulationManager.runStep();
 
         //If simulation state is zero then we have done the complete simulation , give message to user and reset
         if(simulationState == null) {
@@ -332,11 +336,11 @@ public class MainWindowViewController implements Initializable {
 
 
         //reset manager
-        //TODO
+        simulationManager = new SimulationManager();
 
         //Load in XML DOC
         System.out.println("Loading XML Document");
-        //TODO read selecion model
+        simulationManager.setInstructionList(new XMLProcessor().generateProcessListBasedOnXML("Instructions_20000_20.xml"));
 
 
 

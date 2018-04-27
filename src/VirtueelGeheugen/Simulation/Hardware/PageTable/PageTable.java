@@ -18,11 +18,22 @@ public class PageTable extends ArrayList<PageTableEntry> {
 //======================================================================================================================
     //public methods
 
+    /**
+     * TODO
+     * @return The clock time of the last used page.
+     */
     public int getLastUsed(){
-        int max = 0;
+
+        return getLastUsedPage().getLastAccessTime();
+    }
+
+    public PageTableEntry getLastUsedPage(){
+
+        PageTableEntry max = null;
         for(PageTableEntry pageTableEntry: this){
 
-            if(max < pageTableEntry.getLastAccessTime()) max = pageTableEntry.getLastAccessTime();
+            if(max == null) max = pageTableEntry;
+            else if(max.getLastAccessTime() < pageTableEntry.getLastAccessTime()) max = pageTableEntry;
         }
         return max;
     }
@@ -46,13 +57,16 @@ public class PageTable extends ArrayList<PageTableEntry> {
      */
     public PageTableEntry removeLRU(){
 
-        PageTableEntry LRU = this.get(0);
+        PageTableEntry LRU = null;
         for(PageTableEntry entry: this){
-            if(entry.getLastAccessTime() < LRU.getLastAccessTime()){
+            if(LRU == null) {
+                if (entry.isPresent()) LRU = entry;
+            }
+            else if(entry.getLastAccessTime() < LRU.getLastAccessTime() && entry.isPresent()){
                 LRU = entry;
             }
         }
-        LRU.setPresent(false);
+        if(LRU != null) LRU.setPresent(false);
         return LRU;
     }
 
@@ -82,26 +96,31 @@ public class PageTable extends ArrayList<PageTableEntry> {
      */
     public void addToRAM(int address, Process process, int accessTime){
 
-        int pageNumber = translateAdressToPage(address);
-        this.get(pageNumber).addToRAM(process.getProcessRAMInterface().add(process, pageNumber), accessTime);
+        this.get(address).addToRAM(process.getProcessRAMInterface().add(process, address), accessTime);
     }
 
     /**
+     * TODO remove
      * Set a page containing a certain address as modified.
      *
      * @param address Address in a certain page.
      */
-    public void setPageTableAsModified(int address){
-        this.get(translateAdressToPage(address)).setModified(true);
+    @Deprecated
+    public void setPageTableAsModified(int address, int accessTime){
+
+        PageTableEntry entry = this.get(translateAddressToPage(address));
+        entry.setModified(true);
+        entry.setLastAccessTime(accessTime);
+
     }
 //======================================================================================================================
     //private functions
 
-    private int translateAdressToPage(int address){
+    public static int translateAddressToPage(int address){
         return address / PAGE_SIZE;
     }
 
-    private int getOffset(int address){
+    public static int getOffset(int address){
         return address % PAGE_SIZE;
     }
 }
