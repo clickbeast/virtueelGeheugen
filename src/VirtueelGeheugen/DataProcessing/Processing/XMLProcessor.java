@@ -31,7 +31,7 @@ public class XMLProcessor {
         try {
 
             String path = System.getProperty("user.dir");
-            File file = new File(path + File.separator + "src", fileName);
+            File file = new File(path + File.separator + "resources", fileName);
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document doc = documentBuilder.parse(file);
