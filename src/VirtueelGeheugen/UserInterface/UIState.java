@@ -98,39 +98,14 @@ public class UIState {
         //fill previously executed
 
         if(simulationState.getProcessLeavingRam() != null) {
-            this.lastProcessRemovedFromRamId = String.valueOf(simulationState.getProcessLeavingRam().getWriteTos());
+            this.lastProcessRemovedFromRamId = String.valueOf(simulationState.getProcessLeavingRam().getpId());
+            this.lastProcessRemovedFromRamNumberOfWritesToRam = String.valueOf(simulationState.getProcessLeavingRam().getWriteTos());
             this.lastProcessRemovedFromRamNumberOfWritesToPercistent = String.valueOf(simulationState.getProcessLeavingRam().getWriteBacks());
         }
 
     }
 
 
-
-
-    //TODO could be moved to simulationManager eventueel
-
-
-    private int calculateTotalAmountOfWritesToRam(SimulationManager simulationManager) {
-        System.out.println("Calculating total amounts of writes to ram");
-        int count = 0;
-
-//        //TODO
-//        for(Process process: null)  {
-//
-//
-//        }
-
-        return count;
-    }
-
-    private int calculateTotalAmountOfWritesToPercistent(SimulationManager simulationManager) {
-
-        System.out.println("Calculating total amounts of writes to percistent");
-        int count = 0;
-
-
-        return count;
-    }
 
     //
     // GETTERS
