@@ -340,6 +340,7 @@ public class MainWindowViewController implements Initializable {
 
 
 
+
         //reset UI
         this.updateUIBasedOnNewState(new UIState(null));
 

@@ -46,9 +46,7 @@ public class UIState {
         this.pageTableCells = new ArrayList<>();
         this.ramTableCells = new ArrayList<>();
 
-
         //Process simulation state
-
     }
 
 
