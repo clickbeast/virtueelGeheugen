@@ -1,5 +1,7 @@
 package VirtueelGeheugen.Simulation.Hardware.PageTable;
 
+import VirtueelGeheugen.Simulation.Process;
+
 import java.util.ArrayList;
 
 public class PageTable extends ArrayList<PageTableEntry> {
@@ -73,14 +75,15 @@ public class PageTable extends ArrayList<PageTableEntry> {
      *     </li>
      * </ul>
      *
-     * @param entry      Specified page.
-     * @param frame      The frame number where the page will be held.
+     * @param address    Adress of the instruction being executed.
+     * @param process    The process owning this page table.
      * @param accessTime The current clock time.
      *
      */
-    public void addToRAM(int entry, int frame, int accessTime){
+    public void addToRAM(int address, Process process, int accessTime){
 
-        this.get(entry).addToRAM(frame, accessTime);
+        int pageNumber = translateAdressToPage(address);
+        this.get(pageNumber).addToRAM(process.getProcessRAMInterface().add(process, pageNumber), accessTime);
     }
 
     /**

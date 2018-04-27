@@ -109,7 +109,7 @@ public class Process {
 
         while (present < pageCount) {
 
-            pageTable.addToRAM(address, processRAMInterface.add(), accessTime);
+            addPage(address, accessTime);
             writeTos++;
         }
     }
@@ -146,9 +146,15 @@ public class Process {
         processRAMInterface.remove(entry.getFrameNumber());
     }
 
+    /**
+     * Method to be called when adding to add a page.
+     *
+     * @param address    The address of the instruction being called.
+     * @param accessTime The current clock time.
+     */
     private void addPage(int address, int accessTime){
 
-        pageTable.addToRAM(address, processRAMInterface.add(), accessTime);
+        pageTable.addToRAM(address, this, accessTime);
     }
 //======================================================================================================================
     //public functions
