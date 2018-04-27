@@ -54,7 +54,7 @@ public class Main extends Application {
         mainwindow.scene = primaryStage.getScene();
 
         System.out.println("SETTING XML DATA");
-        this.simulationManager.setInstructionList(new XMLProcessor().generateProcessListBasedOnXML("Instructions_20000_20.xml"));
+        this.simulationManager.setInstructionList(new XMLProcessor().generateProcessListBasedOnXML("Instructions_30_3.xml"));
         this.mainwindow.startFinished();
 
 

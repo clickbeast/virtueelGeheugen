@@ -1,7 +1,6 @@
 package VirtueelGeheugen;
 
 import VirtueelGeheugen.DataProcessing.Processing.XMLProcessor;
-import VirtueelGeheugen.Simulation.Hardware.PageTable.PageTable;
 import VirtueelGeheugen.Simulation.SimulationManager;
 import VirtueelGeheugen.Simulation.SimulationState;
 import VirtueelGeheugen.UserInterface.HistoryManager;
@@ -95,6 +94,8 @@ public class MainWindowViewController implements Initializable {
     //toolbar itself
     public ToolBar topToolBar;
 
+    public ChoiceBox pagingMethodChoiceBox;
+
 
     private int currentSelectedXMLIndex = 0;
     private String document;
@@ -135,17 +136,14 @@ public class MainWindowViewController implements Initializable {
                         case 0:
                             System.out.println("0");
                             System.out.println("Preparing to load in new fxml -> generate warning");
-                            document = "Instructions_30_3.xml";
                             changeXMLWarning();
                             break;
                         case 1:
                             System.out.println("1");
-                            document = "Instructions_20000_4.xml";
                             changeXMLWarning();
                             break;
                         default:
                             System.out.println("2");
-                            document = "Instructions_20000_20.xml";
                             changeXMLWarning();
                             break;
                     }
@@ -178,9 +176,33 @@ public class MainWindowViewController implements Initializable {
         this.pageTableAnchorPane.getChildren().add(pageTableView);
         this.ramTableAnchorPane.getChildren().add(ramView);
 
+        pagingMethodChoiceBox.setItems(FXCollections.observableArrayList("PrePaging","DemandPaging"));
+        pagingMethodChoiceBox.getSelectionModel().selectFirst();
+        pagingMethodChoiceBox.getSelectionModel().getSelectedIndex();
+        this.currentSelectedXMLIndex = pagingMethodChoiceBox.getSelectionModel().getSelectedIndex();
+
+        //configure paging method choice box
+        pagingMethodChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 
 
-        //configure others
+                    switch ((int) newValue) {
+                        case 0:
+                            System.out.println("Changing paging method -> Prepaging");
+                            break;
+                        case 1:
+                            System.out.println("Changing paging method -> Demand Paging");
+                            break;
+                        default:
+                            break;
+                    }
+            }
+
+
+
+
+        });
 
 
     }
@@ -251,14 +273,17 @@ public class MainWindowViewController implements Initializable {
         }else {
             //generate UI Appropiate data based on current simulation state
             UIState newUIState = new UIState(simulationState);
-            this.updateUIBasedOnNewState(newUIState);
             this.historyManager.addNewState(newUIState);
+            this.updateUIBasedOnNewState(newUIState);
+
+            //Always add first to history  manager
+            //this.historyManager.addNewState(newUIState);
 
 
         }
 
-        this.disableCheck();
         this.unFreezeUI();
+        this.disableCheck();
 
 
     }
@@ -287,7 +312,6 @@ public class MainWindowViewController implements Initializable {
 
 
             if(simulationState != null) {
-
                 //Convert
                 UIState uiState = new UIState(simulationState);
                 this.historyManager.addNewState(uiState);
@@ -301,8 +325,6 @@ public class MainWindowViewController implements Initializable {
                 //SHOW UI
                 this.updateUIBasedOnNewState(this.historyManager.latestState());
             }
-
-
         }else{
             //cancel
             System.out.println("Canceled");
@@ -314,11 +336,13 @@ public class MainWindowViewController implements Initializable {
 
 
     public void backHistoryAction(ActionEvent actionEvent) {
-        this.updateUIBasedOnNewState(this.historyManager.previousState());
+        this.updateUIBasedOnNewState(this.historyManager.goToPreviousState());
+        this.disableCheck();
     }
 
     public void forwardHistoryAction(ActionEvent actionEvent) {
         this.updateUIBasedOnNewState(this.historyManager.nextState());
+        this.disableCheck();
     }
 
 
@@ -329,7 +353,6 @@ public class MainWindowViewController implements Initializable {
     public void reset() {
         System.out.println("RESETTING");
         this.historyManager.reset();
-
 
         //reset manager
         simulationManager = new SimulationManager();
@@ -342,8 +365,8 @@ public class MainWindowViewController implements Initializable {
         switch (this.choiceBox.getSelectionModel().getSelectedIndex()) {
 
             case 0: simulationManager.setInstructionList(new XMLProcessor().generateProcessListBasedOnXML("Instructions_30_3.xml"));
-            case 1: simulationManager.setInstructionList(new XMLProcessor().generateProcessListBasedOnXML("Instructions_30_3.xml"));
-            case 2:simulationManager.setInstructionList(new XMLProcessor().generateProcessListBasedOnXML("Instructions_30_3.xml"));
+            case 1: simulationManager.setInstructionList(new XMLProcessor().generateProcessListBasedOnXML("Instructions_20000_4.xml"));
+            case 2:simulationManager.setInstructionList(new XMLProcessor().generateProcessListBasedOnXML("Instructions_20000_20.xml"));
         }
 
 
@@ -393,10 +416,14 @@ public class MainWindowViewController implements Initializable {
     public void disableCheck() {
         if(historyManager.isFirstState()) {
             this.backwardHistoryButton.setDisable(true);
+        }else{
+            this.backwardHistoryButton.setDisable(false);
         }
 
         if(historyManager.isLastState()) {
             this.forwardHistoryButton.setDisable(true);
+        }else{
+            this.forwardHistoryButton.setDisable(false);
         }
     }
 
@@ -437,17 +464,26 @@ public class MainWindowViewController implements Initializable {
             //previous insruction
 
             //check hisotryManager if there is a previous state
-            if(this.historyManager.previousState() != null) {
-                this.previousInstructionOperationLabel.setText(this.historyManager.previousState().getCurrentInstructionOperation());
-                this.previousInstructionVirtualAdressLabel.setText(this.historyManager.previousState().getCurrentInstructionVirtualAdress());
-                this.previousInstructionPhysicalAdressLabel.setText(this.historyManager.previousState().getCurrentInstructionPhysicalAdress());
+            if(this.historyManager.accessPreviousState() != null) {
+                this.previousInstructionOperationLabel.setText(this.historyManager.accessPreviousState().getCurrentInstructionOperation());
+                this.previousInstructionVirtualAdressLabel.setText(this.historyManager.accessPreviousState().getCurrentInstructionVirtualAdress());
+                this.previousInstructionPhysicalAdressLabel.setText(this.historyManager.accessPreviousState().getCurrentInstructionPhysicalAdress());
 
                 this.previousInstructionProcessIdLabel.setText("Id: " +
-                        String.valueOf(this.historyManager.previousState().getCurrentInstructionProcessId()));
+                        String.valueOf(this.historyManager.accessPreviousState().getCurrentInstructionProcessId()));
                 this.previousInstructionProcessWritesToRamLabel.setText("#Writes To Ram: " +
-                        String.valueOf(this.historyManager.previousState().getCurrentInsructionProcessNumberOfWritesToRam()));
+                        String.valueOf(this.historyManager.accessPreviousState().getCurrentInsructionProcessNumberOfWritesToRam()));
                 this.previousInstructionProcessWritesToPercistentLabel.setText("#Writes To Percistent: " +
-                         String.valueOf(this.historyManager.previousState().getCurrentInstructionProcessNumberOfWritesToPercistent()));
+                         String.valueOf(this.historyManager.accessPreviousState().getCurrentInstructionProcessNumberOfWritesToPercistent()));
+
+            }else{
+                this.previousInstructionOperationLabel.setText("");
+                this.previousInstructionPhysicalAdressLabel.setText("");
+                this.previousInstructionVirtualAdressLabel.setText("");
+
+                this.previousInstructionProcessIdLabel.setText("Id: ");
+                this.previousInstructionProcessWritesToPercistentLabel.setText("#Writes To Percistent: ");
+                this.previousInstructionProcessWritesToRamLabel.setText("#Writes To Ram: ");
 
             }
 
