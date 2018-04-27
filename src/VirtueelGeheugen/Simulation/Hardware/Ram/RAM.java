@@ -45,6 +45,11 @@ public class RAM {
         public void remove(int frame) {
             RAM.this.removePage(frame);
         }
+
+        @Override
+        public void overWrite(Process process, int pageNumber, int frame){
+            frames.get(frame).fillPage(process, pageNumber);
+        }
     };
 //======================================================================================================================
     //class specs
@@ -121,9 +126,12 @@ public class RAM {
      *
      * @param process Process to remove.
      */
-    public void terminate(Process process){
+    public void terminate(Process process, int accessTime){
 
         if(processList.contains(process)) processList.remove(process);
+        for(Process RAMProcess: processList){
+            RAMProcess.scalePagesToFit(FRAME_COUNT / processList.size(), -1, accessTime);
+        }
     }
 
     /**
