@@ -1,5 +1,6 @@
 package VirtueelGeheugen.UserInterface;
 
+import VirtueelGeheugen.UserInterface.ListObjects.PageTableData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
@@ -7,24 +8,61 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
+import java.util.List;
+
 public class PageTableView extends ListView<HBox> {
 
 
     public PageTableView() {
         super();
+        configurePageTable();
+    }
 
 
-        //generate HBOX
+    public void configurePageTable() {
+        this.setMouseTransparent( true );
+        this.setFocusTraversable( false );
+        this.setPlaceholder(new Label("No Content In PageTable"));
+
+        this.fillWithData(null);
+        this.addCellWithData(new PageTableData("dfd","dfgdg","jfkgj","fgfg"));
+        this.addCellWithData(new PageTableData("dfd","dfgdg","jfkgj","fgfg"));
+
+        System.out.println("GENERATIN DONE");
+    }
 
 
+    //import the right data
+    public void fillWithData(List<PageTableData> pageTableCells) {
+
+        //clear current data
+        this.getItems().clear();
+        this.addPlaceHolderCell();
+        if(pageTableCells != null && pageTableCells.size() == 16) {
+            for (PageTableData pageTableData : pageTableCells) {
+                this.addCellWithData(pageTableData);
+            }
+        }
+    }
+
+    private void addPlaceHolderCell() {
+        this.addCellWithData(new PageTableData("Present Bit","Modify Bit","Last Access Time","Frame Number"));
+    }
+
+    private void addCellWithData(PageTableData pageTableData) {
         HBox hbox = new HBox();
 
         //Label config
+        Label c1 = new Label(pageTableData.getPresentBit());
+        Label c2 = new Label(pageTableData.getModifyBit());
+        Label c3 = new Label(pageTableData.getLastAccessTime());
+        Label c4 = new Label(pageTableData.getFrameNumber());
 
-        Label c1 = new Label("bonjour");
-        Label c2 = new Label("bonjour");
-        Label c3 = new Label("bonjour");
-        Label c4 = new Label("bonjour");
+        HBox.setHgrow(c1, Priority.ALWAYS);
+        HBox.setHgrow(c2, Priority.ALWAYS);
+        HBox.setHgrow(c3, Priority.ALWAYS);
+        HBox.setHgrow(c4, Priority.ALWAYS);
+
 
         //Wrap in HBOX again
         HBox w1 = new HBox(c1);
@@ -38,47 +76,18 @@ public class PageTableView extends ListView<HBox> {
         HBox.setHgrow(w3, Priority.ALWAYS);
         HBox.setHgrow(w4, Priority.ALWAYS);
 
-
         hbox.getChildren().add(w1);
         hbox.getChildren().add(w2);
         hbox.getChildren().add(w3);
         hbox.getChildren().add(w4);
 
 
-
         this.getItems().add(hbox);
+    }
 
-
-        ObservableList<String> names = FXCollections.observableArrayList(
-                "Julia", "Ian", "Sue", "Matthew", "Hannah", "Stephan", "Denise");
-
-
-
-
-        this.getItems().add(hbox);
-
-
-        this.setPlaceholder(new Label("No Content In List"));
-
-
-
-        System.out.println("GENERATIN DONE");
-
+    public void reset() {
+        this.getItems().clear();
     }
 
 
-    public void configurePageTable() {
-
-    }
-
-
-    //import the right data
-    public void fillWithData() {
-
-    }
-
-    public void prepareCell() {
-
-
-    }
 }

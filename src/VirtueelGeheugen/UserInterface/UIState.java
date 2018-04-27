@@ -5,6 +5,11 @@ import VirtueelGeheugen.Simulation.Hardware.PageTable.PageTable;
 import VirtueelGeheugen.Simulation.Process;
 import VirtueelGeheugen.Simulation.SimulationManager;
 import VirtueelGeheugen.Simulation.SimulationState;
+import VirtueelGeheugen.UserInterface.ListObjects.PageTableData;
+import VirtueelGeheugen.UserInterface.ListObjects.RamTableData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 //keeps the text data that is or was on screen.
 public class UIState {
@@ -27,6 +32,9 @@ public class UIState {
 
 
     //PageTableData
+    private ArrayList<PageTableData> pageTableCells;
+    private ArrayList<RamTableData> ramTableCells;
+
 
     //Ram Data
 
@@ -38,9 +46,9 @@ public class UIState {
     public UIState(SimulationState simulationState) {
         //fill and calculate what's needed
 
-
-
     }
+
+
 
     //TODO could be moved to simulationManager eventueel
 
@@ -111,4 +119,15 @@ public class UIState {
     public String getGetLastProcessRemovedFromRamNumberOfWritesToPercistent() {
         return getLastProcessRemovedFromRamNumberOfWritesToPercistent;
     }
+
+    public ArrayList<PageTableData> getPageTableCells() {
+        return pageTableCells;
+    }
+
+    public ArrayList<RamTableData> getRamTableCells() {
+        return ramTableCells;
+    }
+
+
+
 }

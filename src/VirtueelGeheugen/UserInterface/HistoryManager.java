@@ -67,4 +67,8 @@ public class HistoryManager  {
         System.out.println(this.previousStates.size() - 1);
         return currentIndex == (this.previousStates.size() - 1) || this.previousStates.size() == 0;
     }
+
+    public boolean isPresent() {
+        return currentIndex == this.previousStates.size();
+    }
 }

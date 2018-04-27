@@ -46,7 +46,9 @@ public class Main extends Application {
 
         primaryStage.setTitle("Memory Simulator");
         //primaryStage.setResizable(false);
-        primaryStage.setScene(new Scene(flowPane, 1000, 750));
+        primaryStage.setScene(new Scene(flowPane, 1200, 755));
+        primaryStage.setMinWidth(800);
+        primaryStage.setMinHeight(750);
         primaryStage.show();
         this.simulationManager.setMainWindowController(mainwindow);
         mainwindow.scene = primaryStage.getScene();

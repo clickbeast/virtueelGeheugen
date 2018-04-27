@@ -109,7 +109,7 @@
                                        <children>
                                           <VBox spacing="10.0" HBox.hgrow="ALWAYS">
                                              <children>
-                                                <TitledPane alignment="CENTER" animated="false" collapsible="false" text="Executing Current Instruction">
+                                                <TitledPane alignment="CENTER" animated="false" collapsible="false" text="Executed Instruction">
                                                   <content>
                                                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="416.0" prefWidth="328.0">
                                                          <children>
@@ -300,7 +300,7 @@
                                                 <Insets />
                                              </opaqueInsets>
                                           </VBox>
-                                          <AnchorPane HBox.hgrow="ALWAYS">
+                                          <AnchorPane prefHeight="449.0" prefWidth="427.0" HBox.hgrow="ALWAYS">
                                              <HBox.margin>
                                                 <Insets left="10.0" />
                                              </HBox.margin>

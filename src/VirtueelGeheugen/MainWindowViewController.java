@@ -392,8 +392,25 @@ public class MainWindowViewController implements Initializable {
     //changes the content being shown by the UI
     public void updateUIBasedOnNewState(UIState uiState) {
         if(uiState != null) {
-            //TODO IMPORTANTEEEE
+
+            if(historyManager.isPresent()) {
+                this.currentStatePane.setText("Current State");
+
+            }else{
+                this.currentStatePane.setText("Viewing History State");
+
+            }
+
+
+
+        }else{
+            basicFill();
         }
+    }
+
+    public void basicFill() {
+        //when no data is present-
+        this.currentStatePane.setText("No Instruction executed");
     }
 
 
