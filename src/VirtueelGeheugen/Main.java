@@ -41,7 +41,7 @@ public class Main extends Application {
             }
         });
 
-/*
+
         Parent flowPane = loader.load();
 
         primaryStage.setTitle("Memory Simulator");
@@ -51,7 +51,7 @@ public class Main extends Application {
         this.simulationManager.setMainWindowController(mainwindow);
         mainwindow.scene = primaryStage.getScene();
         this.mainwindow.startFinished();
-*/
+
         InstructionList list = (new XMLProcessor().generateProcessListBasedOnXML("Instructions_30_3.xml"));
 
         /**
