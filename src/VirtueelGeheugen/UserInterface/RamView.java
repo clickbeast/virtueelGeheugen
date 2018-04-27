@@ -35,7 +35,7 @@ public class RamView extends ListView<HBox> {
         //clear current data
         this.getItems().clear();
         this.addPlaceHolderCell();
-        if(ramTableCells != null && ramTableCells.size() == 16) {
+        if(ramTableCells != null && ramTableCells.size() == 12) {
             for (RamTableData ramTableData : ramTableCells) {
                 this.addCellWithData(ramTableData);
             }

@@ -1,33 +1,31 @@
 package VirtueelGeheugen.UserInterface;
 
-import VirtueelGeheugen.DataProcessing.Containers.InstructionInfo;
-import VirtueelGeheugen.Simulation.Hardware.PageTable.PageTable;
-import VirtueelGeheugen.Simulation.Process;
 import VirtueelGeheugen.Simulation.SimulationManager;
 import VirtueelGeheugen.Simulation.SimulationState;
 import VirtueelGeheugen.UserInterface.ListObjects.PageTableData;
 import VirtueelGeheugen.UserInterface.ListObjects.RamTableData;
 
 import java.util.ArrayList;
-import java.util.List;
 
 //keeps the text data that is or was on screen.
 public class UIState {
 
     //DATA HERE
-    private int timerValue;
-    private int totalAmountOfWritesToRam;
-    private int totalAmountOfWritesToPercistent;
+    private int timerValue = 0;
+    private int totalAmountOfWritesToRam = 0;
+    private int totalAmountOfWritesToPercistent = 0;
 
-    private String currentInstructionOperation;
-    private String currentInstructionVirtualAdress;
-    private String currentInstructionPhysicalAdress;
+    private String currentInstructionOperation = "";
+    private String currentInstructionVirtualAdress = "";
+    private String currentInstructionPhysicalAdress = "";
 
-    private int currentInstructionProcessId;
+    private int currentInstructionProcessId = 0;
+    private int currentInsructionProcessNumberOfWritesToRam = 0;
+    private int currentInstructionProcessNumberOfWritesToPercistent = 0;
 
-    private String lastProcessRemovedFromRamId;
-    private String lastProcessRemovedFromRamNumberOfWritesToRam;
-    private String getLastProcessRemovedFromRamNumberOfWritesToPercistent;
+    private String lastProcessRemovedFromRamId = "";
+    private String lastProcessRemovedFromRamNumberOfWritesToRam= "";
+    private String lastProcessRemovedFromRamNumberOfWritesToPercistent = "";
 
 
 
@@ -45,8 +43,22 @@ public class UIState {
 
     public UIState(SimulationState simulationState) {
         //fill and calculate what's needed
+        this.pageTableCells = new ArrayList<>();
+        this.ramTableCells = new ArrayList<>();
+
+
+        //Process simulation state
 
     }
+
+
+
+    public void processSimulationState(SimulationState simulationState) {
+
+        //TODO !!!
+
+    }
+
 
 
 
@@ -116,8 +128,8 @@ public class UIState {
         return lastProcessRemovedFromRamNumberOfWritesToRam;
     }
 
-    public String getGetLastProcessRemovedFromRamNumberOfWritesToPercistent() {
-        return getLastProcessRemovedFromRamNumberOfWritesToPercistent;
+    public String getLastProcessRemovedFromRamNumberOfWritesToPercistent() {
+        return lastProcessRemovedFromRamNumberOfWritesToPercistent;
     }
 
     public ArrayList<PageTableData> getPageTableCells() {
@@ -128,6 +140,11 @@ public class UIState {
         return ramTableCells;
     }
 
+    public int getCurrentInsructionProcessNumberOfWritesToRam() {
+        return currentInsructionProcessNumberOfWritesToRam;
+    }
 
-
+    public int getCurrentInstructionProcessNumberOfWritesToPercistent() {
+        return currentInstructionProcessNumberOfWritesToPercistent;
+    }
 }

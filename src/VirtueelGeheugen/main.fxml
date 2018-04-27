@@ -54,7 +54,7 @@
                                        <children>
                                           <HBox fx:id="alertInfoView1" alignment="CENTER" prefHeight="66.0" style="-fx-background-color:  #DBEDF7; -fx-border-color: #C0E8F1; -fx-border-radius: 5;">
                                              <children>
-                                                <Label fx:id="timer" prefHeight="19.0" prefWidth="120.0" text=" Timer: 110" textAlignment="CENTER" textFill="#438aa3" HBox.hgrow="ALWAYS">
+                                                <Label fx:id="timer" prefHeight="19.0" prefWidth="120.0" text=" Timer: " textAlignment="CENTER" textFill="#438aa3" HBox.hgrow="ALWAYS">
                                                    <HBox.margin>
                                                       <Insets left="5.0" />
                                                    </HBox.margin>
@@ -69,7 +69,7 @@
                                           </HBox>
                                           <HBox fx:id="alertInfoView11" alignment="CENTER" prefHeight="66.0" style="-fx-background-color:  #DBEDF7; -fx-border-color: #C0E8F1; -fx-border-radius: 5;">
                                              <children>
-                                                <Label fx:id="totalAmountOfWritesToRamLabel" prefHeight="19.0" prefWidth="167.0" text=" #Writes To Ram: 110" textAlignment="CENTER" textFill="#438aa3" HBox.hgrow="ALWAYS">
+                                                <Label fx:id="totalAmountOfWritesToRamLabel" prefHeight="19.0" prefWidth="167.0" text=" #Writes To Ram: " textAlignment="CENTER" textFill="#438aa3" HBox.hgrow="ALWAYS">
                                                    <HBox.margin>
                                                       <Insets left="5.0" />
                                                    </HBox.margin>
@@ -81,7 +81,7 @@
                                           </HBox>
                                           <HBox fx:id="alertInfoView111" alignment="CENTER" prefHeight="30.0" prefWidth="188.0" style="-fx-background-color:  #DBEDF7; -fx-border-color: #C0E8F1; -fx-border-radius: 5;">
                                              <children>
-                                                <Label fx:id="totalAmountsOfWritesToPercistentLabel" prefHeight="17.0" prefWidth="250.0" text="#Writes to Percitent: 10" textAlignment="CENTER" textFill="#438aa3" HBox.hgrow="ALWAYS">
+                                                <Label fx:id="totalAmountsOfWritesToPercistentLabel" prefHeight="17.0" prefWidth="250.0" text="#Writes to Percitent: " textAlignment="CENTER" textFill="#438aa3" HBox.hgrow="ALWAYS">
                                                    <HBox.margin>
                                                       <Insets left="5.0" />
                                                    </HBox.margin>
@@ -121,7 +121,7 @@
                                                                         <Pane HBox.hgrow="ALWAYS" />
                                                                         <HBox fx:id="alertInfoView113" alignment="CENTER" prefHeight="66.0" style="-fx-background-color:  #DBEDF7; -fx-border-color: #C0E8F1; -fx-border-radius: 5;">
                                                                            <children>
-                                                                              <Label fx:id="currentInstructionOperationLabel" prefHeight="19.0" text="Write" textAlignment="CENTER" textFill="#438aa3" HBox.hgrow="ALWAYS">
+                                                                              <Label fx:id="currentInstructionOperationLabel" prefHeight="19.0" textAlignment="CENTER" textFill="#438aa3" HBox.hgrow="ALWAYS">
                                                                                  <HBox.margin>
                                                                                     <Insets left="5.0" right="5.0" />
                                                                                  </HBox.margin>
@@ -136,12 +136,12 @@
                                                                         <Pane HBox.hgrow="ALWAYS" />
                                                                         <HBox fx:id="alertInfoView114" alignment="CENTER" prefHeight="66.0" style="-fx-background-color:  #DBEDF7; -fx-border-color: #C0E8F1; -fx-border-radius: 5;">
                                                                            <children>
-                                                                              <Label fx:id="currentInstructionVirtualAdressLabel" prefHeight="19.0" text="287337 | 89898" textAlignment="CENTER" textFill="#438aa3" HBox.hgrow="ALWAYS">
+                                                                              <Label fx:id="currentInstructionVirtualAdressLabel" prefHeight="19.0" textAlignment="CENTER" textFill="#438aa3" HBox.hgrow="ALWAYS">
                                                                                  <HBox.margin>
                                                                                     <Insets left="5.0" right="5.0" />
                                                                                  </HBox.margin>
                                                                                  <tooltip>
-                                                                                    <Tooltip text="Virtuall Adress | Offset" />
+                                                                                    <Tooltip text="Start Of Page | Offset" />
                                                                                  </tooltip>
                                                                               </Label>
                                                                            </children>
@@ -150,11 +150,14 @@
                                                                   </HBox>
                                                                   <HBox>
                                                                      <children>
-                                                                        <Label text="Physical Adress:" />
+                                                                        <Label text="Physical Adress:">
+                                                                           <tooltip>
+                                                                              <Tooltip text="Start Of Page | Offset" />
+                                                                           </tooltip></Label>
                                                                         <Pane HBox.hgrow="ALWAYS" />
                                                                         <HBox fx:id="alertInfoView115" alignment="CENTER" prefHeight="66.0" style="-fx-background-color:  #DBEDF7; -fx-border-color: #C0E8F1; -fx-border-radius: 5;">
                                                                            <children>
-                                                                              <Label fx:id="currentInstructionPhysicalAdressLabel" prefHeight="19.0" text="18838792 | 7878" textAlignment="CENTER" textFill="#438aa3" HBox.hgrow="ALWAYS">
+                                                                              <Label fx:id="currentInstructionPhysicalAdressLabel" prefHeight="19.0" textAlignment="CENTER" textFill="#438aa3" HBox.hgrow="ALWAYS">
                                                                                  <HBox.margin>
                                                                                     <Insets left="5.0" right="5.0" />
                                                                                  </HBox.margin>
@@ -177,17 +180,17 @@
                                                                      <children>
                                                                         <VBox spacing="5.0">
                                                                            <children>
-                                                                              <Label fx:id="currentInstructionProcessIdLabel" text="Id : 898">
+                                                                              <Label fx:id="currentInstructionProcessIdLabel" text="Id :">
                                                                                  <VBox.margin>
                                                                                     <Insets left="5.0" />
                                                                                  </VBox.margin>
                                                                               </Label>
-                                                                              <Label fx:id="currentInstructionProcessWritesToRamLabel" text="#Writes To Ram: 102">
+                                                                              <Label fx:id="currentInstructionProcessWritesToRamLabel" text="#Writes To Ram: ">
                                                                                  <VBox.margin>
                                                                                     <Insets left="5.0" />
                                                                                  </VBox.margin>
                                                                               </Label>
-                                                                              <Label fx:id="currentInstructionProcessWritesToPercistentLabel" text="#Writes To Percistent:  20">
+                                                                              <Label fx:id="currentInstructionProcessWritesToPercistentLabel" text="#Writes To Percistent:  ">
                                                                                  <VBox.margin>
                                                                                     <Insets left="5.0" />
                                                                                  </VBox.margin>
@@ -217,7 +220,7 @@
                                                                         <Pane HBox.hgrow="ALWAYS" />
                                                                         <HBox fx:id="alertInfoView1131" alignment="CENTER" prefHeight="66.0" style="-fx-background-color:  #DBEDF7; -fx-border-color: #C0E8F1; -fx-border-radius: 5;">
                                                                            <children>
-                                                                              <Label fx:id="previousInstructionOperationLabel" prefHeight="19.0" text="Write" textAlignment="CENTER" textFill="#438aa3" HBox.hgrow="ALWAYS">
+                                                                              <Label fx:id="previousInstructionOperationLabel" prefHeight="19.0" textAlignment="CENTER" textFill="#438aa3" HBox.hgrow="ALWAYS">
                                                                                  <HBox.margin>
                                                                                     <Insets left="5.0" right="5.0" />
                                                                                  </HBox.margin>
@@ -232,7 +235,7 @@
                                                                         <Pane HBox.hgrow="ALWAYS" />
                                                                         <HBox fx:id="alertInfoView1141" alignment="CENTER" prefHeight="66.0" style="-fx-background-color:  #DBEDF7; -fx-border-color: #C0E8F1; -fx-border-radius: 5;">
                                                                            <children>
-                                                                              <Label fx:id="previousInstructionVirtualAdressLabel" prefHeight="19.0" text="287337 | 89898" textAlignment="CENTER" textFill="#438aa3" HBox.hgrow="ALWAYS">
+                                                                              <Label fx:id="previousInstructionVirtualAdressLabel" prefHeight="19.0" textAlignment="CENTER" textFill="#438aa3" HBox.hgrow="ALWAYS">
                                                                                  <HBox.margin>
                                                                                     <Insets left="5.0" right="5.0" />
                                                                                  </HBox.margin>
@@ -247,7 +250,7 @@
                                                                         <Pane HBox.hgrow="ALWAYS" />
                                                                         <HBox fx:id="alertInfoView1151" alignment="CENTER" prefHeight="66.0" style="-fx-background-color:  #DBEDF7; -fx-border-color: #C0E8F1; -fx-border-radius: 5;">
                                                                            <children>
-                                                                              <Label fx:id="previousInstructionPhysicalAdressLabel" prefHeight="19.0" text="18838792 | 7878" textAlignment="CENTER" textFill="#438aa3" HBox.hgrow="ALWAYS">
+                                                                              <Label fx:id="previousInstructionPhysicalAdressLabel" prefHeight="19.0" textAlignment="CENTER" textFill="#438aa3" HBox.hgrow="ALWAYS">
                                                                                  <HBox.margin>
                                                                                     <Insets left="5.0" right="5.0" />
                                                                                  </HBox.margin>
@@ -270,17 +273,17 @@
                                                                      <children>
                                                                         <VBox spacing="5.0">
                                                                            <children>
-                                                                              <Label fx:id="previousInstructionProcessIdLabel" text="Id : 898">
+                                                                              <Label fx:id="previousInstructionProcessIdLabel" text="Id : ">
                                                                                  <VBox.margin>
                                                                                     <Insets left="5.0" />
                                                                                  </VBox.margin>
                                                                               </Label>
-                                                                              <Label fx:id="previousInstructionProcessWritesToRamLabel" text="#Writes To Ram: 102">
+                                                                              <Label fx:id="previousInstructionProcessWritesToRamLabel" text="#Writes To Ram: ">
                                                                                  <VBox.margin>
                                                                                     <Insets left="5.0" />
                                                                                  </VBox.margin>
                                                                               </Label>
-                                                                              <Label fx:id="previousInstructionProcessWritesToPercistentLabel" text="#Writes To Percistent:  20">
+                                                                              <Label fx:id="previousInstructionProcessWritesToPercistentLabel" text="#Writes To Percistent:  ">
                                                                                  <VBox.margin>
                                                                                     <Insets left="5.0" />
                                                                                  </VBox.margin>
@@ -309,7 +312,7 @@
                                                    <children>
                                                       <AnchorPane VBox.vgrow="ALWAYS">
                                                          <children>
-                                                            <TitledPane fx:id="currentPageTablePane" alignment="CENTER" animated="false" collapsible="false" text="Page Table Of Current Process &lt;5485&gt;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                            <TitledPane fx:id="currentPageTablePane" alignment="CENTER" animated="false" collapsible="false" text="Page Table Of Executed Process" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                <content>
                                                                   <AnchorPane fx:id="pageTableAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="416.0" prefWidth="304.0" />
                                                                </content>
@@ -342,7 +345,7 @@
                                                                         <Pane HBox.hgrow="ALWAYS" />
                                                                         <HBox alignment="CENTER" prefHeight="66.0" style="-fx-background-color:  #DBEDF7; -fx-border-color: #C0E8F1; -fx-border-radius: 5;">
                                                                            <children>
-                                                                              <Label fx:id="lastRemovedProcessIdLabellastRemovedProcessIdLabel" prefHeight="19.0" text="545465" textAlignment="CENTER" textFill="#438aa3" HBox.hgrow="ALWAYS">
+                                                                              <Label fx:id="lastRemovedProcessIdLabel" prefHeight="19.0" textAlignment="CENTER" textFill="#438aa3" HBox.hgrow="ALWAYS">
                                                                                  <HBox.margin>
                                                                                     <Insets left="5.0" right="5.0" />
                                                                                  </HBox.margin>
@@ -357,7 +360,7 @@
                                                                         <Pane HBox.hgrow="ALWAYS" />
                                                                         <HBox fx:id="alertInfoView1142" alignment="CENTER" prefHeight="66.0" style="-fx-background-color:  #DBEDF7; -fx-border-color: #C0E8F1; -fx-border-radius: 5;">
                                                                            <children>
-                                                                              <Label fx:id="lastRemovedProcessAmountOfWritesToRam" prefHeight="19.0" text="15" textAlignment="CENTER" textFill="#438aa3" HBox.hgrow="ALWAYS">
+                                                                              <Label fx:id="lastRemovedProcessAmountOfWritesToRam" prefHeight="19.0" textAlignment="CENTER" textFill="#438aa3" HBox.hgrow="ALWAYS">
                                                                                  <HBox.margin>
                                                                                     <Insets left="5.0" right="5.0" />
                                                                                  </HBox.margin>
@@ -372,7 +375,7 @@
                                                                         <Pane HBox.hgrow="ALWAYS" />
                                                                         <HBox fx:id="alertInfoView1152" alignment="CENTER" prefHeight="66.0" style="-fx-background-color:  #DBEDF7; -fx-border-color: #C0E8F1; -fx-border-radius: 5;">
                                                                            <children>
-                                                                              <Label fx:id="lastRemovedProcessAmountOfWritesToPercistent" prefHeight="19.0" text="20" textAlignment="CENTER" textFill="#438aa3" HBox.hgrow="ALWAYS">
+                                                                              <Label fx:id="lastRemovedProcessAmountOfWritesToPercistent" prefHeight="19.0" textAlignment="CENTER" textFill="#438aa3" HBox.hgrow="ALWAYS">
                                                                                  <HBox.margin>
                                                                                     <Insets left="5.0" right="5.0" />
                                                                                  </HBox.margin>

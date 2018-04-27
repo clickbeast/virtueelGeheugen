@@ -25,8 +25,6 @@ public class PageTableView extends ListView<HBox> {
         this.setPlaceholder(new Label("No Content In PageTable"));
 
         this.fillWithData(null);
-        this.addCellWithData(new PageTableData("dfd","dfgdg","jfkgj","fgfg"));
-        this.addCellWithData(new PageTableData("dfd","dfgdg","jfkgj","fgfg"));
 
         System.out.println("GENERATIN DONE");
     }

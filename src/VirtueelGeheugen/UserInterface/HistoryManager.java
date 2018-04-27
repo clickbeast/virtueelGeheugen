@@ -39,6 +39,12 @@ public class HistoryManager  {
         currentIndex = this.previousStates.size() - 1;
     }
 
+    public UIState latestState() {
+        this.currentIndex = this.previousStates.size() - 1;
+        return this.previousStates.get(this.currentIndex);
+    }
+
+
     public UIState firstState() {
         this.currentIndex = 0;
         return this.previousStates.get(this.currentIndex);
@@ -51,9 +57,18 @@ public class HistoryManager  {
 
     //gives back the previous state
     public UIState previousState() {
+
+        if(this.previousStates.size() == 0) {
+            return  null;
+        }
+
         if(this.currentIndex - 1 >= 0) {
             this.currentIndex = this.currentIndex -1;
         }
+
+        System.out.println("GETTting previous state with index + " + this.currentIndex);
+
+
         return this.previousStates.get(this.currentIndex);
     }
 

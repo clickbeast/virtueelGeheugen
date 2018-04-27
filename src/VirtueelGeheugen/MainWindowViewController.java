@@ -52,7 +52,7 @@ public class MainWindowViewController implements Initializable {
 
     //STATE WINDOW
     public TitledPane currentStatePane;
-
+    public TitledPane currentPageTablePane;
 
     //Current instruction
     public Label currentInstructionOperationLabel;
@@ -194,9 +194,7 @@ public class MainWindowViewController implements Initializable {
 
         if(result.get() == ButtonType.OK) {
             System.out.println("Resetting and loading new xml");
-            //TODO load in right XM
             this.currentSelectedXMLIndex = this.choiceBox.getSelectionModel().getSelectedIndex();
-
             this.reset();
         }else{
             //cancel
@@ -249,9 +247,9 @@ public class MainWindowViewController implements Initializable {
         }else {
             //generate UI Appropiate data based on current simulation state
             UIState newUIState = new UIState(simulationState);
-
             this.updateUIBasedOnNewState(newUIState);
             this.historyManager.addNewState(newUIState);
+
 
         }
 
@@ -280,20 +278,36 @@ public class MainWindowViewController implements Initializable {
         if(result.get() == ButtonType.OK) {
             System.out.println("Resetting everything" +
                     "");
-            //TODO RUN ALL INSTRUCTIONS CALL A RESET
             this.reset();
+
+
+            //EXECUTION
+
+            SimulationState simulationState = null;
+
+
+            if(simulationState != null) {
+
+                //Convert
+                UIState uiState = new UIState(simulationState);
+                this.historyManager.addNewState(uiState);
+
+
+                while (simulationState != null) {
+                    simulationState = null;
+                    this.historyManager.addNewState(new UIState(simulationState));
+                }
+
+                //SHOW UI
+                this.updateUIBasedOnNewState(this.historyManager.latestState());
+            }
+
+
         }else{
             //cancel
-
-
+            System.out.println("Canceled");
 
         }
-
-        //output summary results
-        //TODO WAIT FOR JONAS
-
-
-
 
 
     }
@@ -308,23 +322,26 @@ public class MainWindowViewController implements Initializable {
     }
 
 
-    //TODO wanneer nog tijd voor
-    public void playHistoryBackAction(ActionEvent actionEvent) {
-        //preparing for playing historyManager
-
-    }
-
-
 
     /*
         Gets called when the system wants to start again
      */
     public void reset() {
-        System.out.println("Resetting");
+        System.out.println("RESETTING");
         this.historyManager.reset();
+
+
+        //reset manager
+        //TODO
 
         //Load in XML DOC
         System.out.println("Loading XML Document");
+        //TODO read selecion model
+
+
+
+        //reset UI
+        this.updateUIBasedOnNewState(new UIState(null));
 
 
         //enable evetyhing again ready for use
@@ -346,16 +363,10 @@ public class MainWindowViewController implements Initializable {
 
         if(result.get() == ButtonType.YES) {
             System.out.println("Resetting everything" + "");
-            //TODO RUN ALL INSTRUCTIONS CALL A RESET
-
-
-            //TODO CHANGE BUTTON TO RESTART BUTTON
-
-
             this.reset();
         }else{
             //do nothing
-
+            System.out.println("NO CALLED");
         }
     }
 
@@ -398,10 +409,51 @@ public class MainWindowViewController implements Initializable {
 
             }else{
                 this.currentStatePane.setText("Viewing History State");
+            }
+
+            //SET SUMMARY
+            this.timer.setText("Timer: " + String.valueOf(uiState.getTimerValue()));
+            this.totalAmountOfWritesToRamLabel.setText(" #Writes To Ram: " + String.valueOf(uiState.getTotalAmountOfWritesToRam()));
+            this.totalAmountsOfWritesToPercistentLabel.setText("#Writes to Percitent: " + String.valueOf(uiState.getTotalAmountOfWritesToPercistent()));
+
+            //current instruction
+            this.currentInstructionOperationLabel.setText(uiState.getCurrentInstructionOperation());
+            this.currentInstructionVirtualAdressLabel.setText(uiState.getCurrentInstructionVirtualAdress());
+            this.currentInstructionPhysicalAdressLabel.setText(uiState.getCurrentInstructionPhysicalAdress());
+            
+            this.currentInstructionProcessIdLabel.setText("Id: " + String.valueOf(uiState.getCurrentInstructionProcessId()));
+            this.currentInstructionProcessWritesToRamLabel.setText("#Writes To Ram: " + String.valueOf(uiState.getCurrentInsructionProcessNumberOfWritesToRam()));
+            this.currentInstructionProcessWritesToPercistentLabel.setText("#Writes To Percistent: " + String.valueOf(uiState.getCurrentInstructionProcessNumberOfWritesToPercistent()));
+            
+
+            //previous insruction
+
+            //check hisotryManager if there is a previous state
+            if(this.historyManager.previousState() != null) {
+                this.previousInstructionOperationLabel.setText(this.historyManager.previousState().getCurrentInstructionOperation());
+                this.previousInstructionVirtualAdressLabel.setText(this.historyManager.previousState().getCurrentInstructionVirtualAdress());
+                this.previousInstructionPhysicalAdressLabel.setText(this.historyManager.previousState().getCurrentInstructionPhysicalAdress());
+
+                this.previousInstructionProcessIdLabel.setText("Id: " +
+                        String.valueOf(this.historyManager.previousState().getCurrentInstructionProcessId()));
+                this.previousInstructionProcessWritesToRamLabel.setText("#Writes To Ram: " +
+                        String.valueOf(this.historyManager.previousState().getCurrentInsructionProcessNumberOfWritesToRam()));
+                this.previousInstructionProcessWritesToPercistentLabel.setText("#Writes To Percistent: " +
+                         String.valueOf(this.historyManager.previousState().getCurrentInstructionProcessNumberOfWritesToPercistent()));
 
             }
 
+            //pagetable
+            this.currentPageTablePane.setText("Page Table Of Executed Process " + "<" + String.valueOf(uiState.getCurrentInstructionProcessId()) + ">");
+            this.pageTableView.fillWithData(uiState.getPageTableCells());
 
+            //ram representation
+            this.ramView.fillWithData(uiState.getRamTableCells());
+
+            //leaving progress
+            this.lastRemovedProcessIdLabel.setText(uiState.getLastProcessRemovedFromRamId());
+            this.lastRemovedProcessAmountOfWritesToRam.setText(uiState.getLastProcessRemovedFromRamNumberOfWritesToRam());
+            this.lastRemovedProcessAmountOfWritesToPercistent.setText(uiState.getLastProcessRemovedFromRamNumberOfWritesToPercistent());
 
         }else{
             basicFill();
@@ -414,17 +466,6 @@ public class MainWindowViewController implements Initializable {
     }
 
 
-    public void fillRamRepresenation() {
-        //TODO
-
-    }
-
-    public void fillPageTableRepresentation() {
-        //TODO
-
-    }
-
-
 
     /**
      *
@@ -434,8 +475,9 @@ public class MainWindowViewController implements Initializable {
      */
 
 
-    //TODO ACTIONS  FOR  COLOR TOGGLE   -> If becomes to ewtended make color editing class etc.
 
+
+    //TODO ACTIONS  FOR  COLOR TOGGLE   -> If becomes to ewtended make color editing class etc.
     public void hideAllHighlighting() {
         //reset listviews
     }
