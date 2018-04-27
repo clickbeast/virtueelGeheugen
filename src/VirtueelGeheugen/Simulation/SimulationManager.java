@@ -72,7 +72,7 @@ public class SimulationManager {
 
             removedProcess = processList.get(instructionInfo.getProcessId());
             removedProcess.removeAllPagesFromRAM();
-            ram.terminate(removedProcess);
+            ram.terminate(removedProcess, getCurrentTime());
             return removedProcess;
         });
         this.options.put("Read", (instructionInfo) -> {
@@ -128,9 +128,14 @@ public class SimulationManager {
     public SimulationState runStep(){
 
         InstructionInfo instruction = instructionList.removeFirst();
+        if(instruction.getOperation().equals("Terminate")) {
+            print(instruction);
+        }
         options.get(instruction.getOperation()).apply(instruction);
 
-        print(instruction);
+        if(instruction.getOperation().equals("Terminate")) {
+            print(instruction);
+        }
         currentTime++;
         return new SimulationState(
                 instruction,

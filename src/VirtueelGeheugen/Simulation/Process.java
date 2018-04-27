@@ -133,11 +133,13 @@ public class Process {
 
         while (present < pageCount) {
 
-            addPage(page, accessTime);
-            writeTos++;
-            simulationInterface.writeToRAM();
+            if(!pageTable.get(page).isPresent()) {
+                addPage(page, accessTime, -1);
+                writeTos++;
+                simulationInterface.writeToRAM();
+                present++;
+            }
             page++;
-            present++;
         }
     }
 
@@ -166,15 +168,17 @@ public class Process {
      *     was in RAM.
      * </p>
      */
-    private void removePage(){
+    private int removePage(){
 
         PageTableEntry entry = pageTable.removeLRU();
         if(entry.isModified()){
             writeBacks++;
             simulationInterface.writeToPersistent();
         }
+        int frameNumber = entry.getFrameNumber();
         entry.setPresent(false);
         processRAMInterface.remove(entry.getFrameNumber());
+        return frameNumber;
     }
 
     /**
@@ -183,20 +187,22 @@ public class Process {
      * @param page       the page number containing the address of the instruction being called.
      * @param accessTime The current clock time.
      */
-    private void addPage(int page, int accessTime){
+    private void addPage(int page, int accessTime, int frame){
 
-        pageTable.addToRAM(page, this, accessTime);
+        if(frame == -1) pageTable.addToRAM(page, this, accessTime);
+        else pageTable.addToRAM(page, this, accessTime, frame);
     }
 
     private PageTableEntry accessPage(int address, int accessTime){
 
         int page = translateAddressToPage(address);
+        int frame = -1;
         PageTableEntry entry = pageTable.get(page);
         if(!entry.isPresent()){
             if(pageTable.getCurrentlyInRAM() >= limit){
-                removePage();
+                frame = removePage();
             }
-            addPage(page, accessTime);
+            addPage(page, accessTime, frame);
         }
         entry.setLastAccessTime(accessTime);
         return entry;
