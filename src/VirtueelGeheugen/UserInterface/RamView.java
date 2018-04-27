@@ -7,7 +7,7 @@ public class RamView extends ListView<String> {
 
 
     public RamView(){
-
+        super();
 
     }
 }

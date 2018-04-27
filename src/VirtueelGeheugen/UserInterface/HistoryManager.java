@@ -63,6 +63,8 @@ public class HistoryManager  {
     }
 
     public boolean isLastState() {
-        return currentIndex == (this.previousStates.size() - 1);
+        System.out.println(currentIndex);
+        System.out.println(this.previousStates.size() - 1);
+        return currentIndex == (this.previousStates.size() - 1) || this.previousStates.size() == 0;
     }
 }
