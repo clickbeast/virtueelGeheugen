@@ -4,6 +4,7 @@ import VirtueelGeheugen.Simulation.Hardware.PageTable.PageTable;
 import VirtueelGeheugen.Simulation.SimulationManager;
 import VirtueelGeheugen.Simulation.SimulationState;
 import VirtueelGeheugen.UserInterface.HistoryManager;
+import VirtueelGeheugen.UserInterface.PageTableView;
 import VirtueelGeheugen.UserInterface.RamView;
 import VirtueelGeheugen.UserInterface.UIState;
 import javafx.beans.value.ChangeListener;
@@ -13,8 +14,10 @@ import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.fxml.Initializable;
+import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainWindowViewController implements Initializable {
@@ -49,7 +52,7 @@ public class MainWindowViewController implements Initializable {
 
     //STATE WINDOW
     public TitledPane currentStatePane;
-
+    public TitledPane currentPageTablePane;
 
     //Current instruction
     public Label currentInstructionOperationLabel;
@@ -68,12 +71,15 @@ public class MainWindowViewController implements Initializable {
     public Label previousInstructionProcessWritesToRamLabel;
     public Label previousInstructionProcessWritesToPercistentLabel;
 
-
-    //public TitledPane currentPageTablePane;
-    //public PageTable pageTableView;
-
-
+    //contains the view for pagetable // ram
+    public PageTableView pageTableView;
     public RamView ramView;
+
+
+    public AnchorPane pageTableAnchorPane;
+    public AnchorPane ramTableAnchorPane;
+
+
 
     //Last removed Process
     public Label lastRemovedProcessIdLabel;
@@ -85,11 +91,11 @@ public class MainWindowViewController implements Initializable {
     public ToggleButton highlightPagesButton;
     public ToggleButton highlightProcessesButton;
 
+    //toolbar itself
+    public ToolBar topToolBar;
 
 
-
-
-
+    private int currentSelectedXMLIndex = 0;
 
 
 
@@ -113,41 +119,100 @@ public class MainWindowViewController implements Initializable {
         //configure xml select button
         choiceBox.setItems(FXCollections.observableArrayList("30 Instructies","20000_4 Instructies","20 000_20 Instructies"));
         choiceBox.getSelectionModel().selectFirst();
-
+        choiceBox.getSelectionModel().getSelectedIndex();
+        this.currentSelectedXMLIndex = choiceBox.getSelectionModel().getSelectedIndex();
 
         //keep the xml xhoice box in het oog wanneer er iets veranderd
         choiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                switch ((int) newValue){
-                    case 0:
 
-                        break;
-                    case 1:
+                System.out.println("Preparing to load in new fxml -> generate warning");
 
-                        break;
-                    default:
-
-                        break;
+                if(currentSelectedXMLIndex != newValue.intValue()) {
+                    switch ((int) newValue) {
+                        case 0:
+                            System.out.println("0");
+                            System.out.println("Preparing to load in new fxml -> generate warning");
+                            changeXMLWarning();
+                            break;
+                        case 1:
+                            System.out.println("1");
+                            changeXMLWarning();
+                            break;
+                        default:
+                            System.out.println("2");
+                            changeXMLWarning();
+                            break;
+                    }
                 }
 
 
             }
+
+
+
+
         });
 
+        this.ramView = new RamView();
+        this.pageTableView = new PageTableView();
+
+
+        //configure bounds
+        AnchorPane.setBottomAnchor(this.pageTableView, -10.0);
+        AnchorPane.setTopAnchor(this.pageTableView,-10.0);
+        AnchorPane.setRightAnchor(this.pageTableView,-10.0);
+        AnchorPane.setLeftAnchor(this.pageTableView,-10.0);
+
+        AnchorPane.setBottomAnchor(this.ramView, -10.0);
+        AnchorPane.setTopAnchor(this.ramView,-10.0);
+        AnchorPane.setRightAnchor(this.ramView,-10.0);
+        AnchorPane.setLeftAnchor(this.ramView,-10.0);
 
         //configure list views
+        this.pageTableAnchorPane.getChildren().add(pageTableView);
+        this.ramTableAnchorPane.getChildren().add(ramView);
 
 
 
         //configure others
 
+
     }
+
+    //Genertates a warning when the user is about to change xml file
+    public void changeXMLWarning() {
+
+
+        Optional<ButtonType> result = new Alert(
+                Alert.AlertType.CONFIRMATION,
+                "Are you sure you want to change XML? Current Simulation Will be removed. And History will be lost",
+                ButtonType.CANCEL,ButtonType.OK
+        ).showAndWait();
+
+
+        if(result.get() == ButtonType.OK) {
+            System.out.println("Resetting and loading new xml");
+            this.currentSelectedXMLIndex = this.choiceBox.getSelectionModel().getSelectedIndex();
+            this.reset();
+        }else{
+            //cancel
+            System.out.println("CANCEL");
+            this.choiceBox.getSelectionModel().select(this.currentSelectedXMLIndex);
+        }
+    }
+
+
+
+
 
     //get called when Main is finshed with doing its things
     public void startFinished() {
         System.out.println("Finished setup of program");
 
+        //check how the buttons of the htsory have to be configured
+        this.disableCheck();
     }
 
 
@@ -177,16 +242,24 @@ public class MainWindowViewController implements Initializable {
         SimulationState simulationState = null;
 
         //If simulation state is zero then we have done the complete simulation , give message to user and reset
+        if(simulationState == null) {
+            this.runningDoneAlert();
+        }else {
+            //generate UI Appropiate data based on current simulation state
+            UIState newUIState = new UIState(simulationState);
+            this.updateUIBasedOnNewState(newUIState);
+            this.historyManager.addNewState(newUIState);
 
 
+        }
 
-        //generate UI Appropiate data based on current simulation state
-        UIState newUIState = new  UIState(simulationState);
-
-        this.updateUIBasedOnNewState(newUIState);
-        this.historyManager.addNewState(newUIState);
         this.disableCheck();
         this.unFreezeUI();
+
+
+//        if(simulationState == null) {
+//            this.executeNextInstructionButton.setDisable(true);
+//        }
 
     }
 
@@ -195,20 +268,46 @@ public class MainWindowViewController implements Initializable {
 
         System.out.println("Running All Instructions after eachother");
 
-        new Alert(
+        Optional<ButtonType> result = new Alert(
                 Alert.AlertType.CONFIRMATION,
                 "Are you sure you want to run all Instructions? Current running simulation will be removed and history will be lost.",
                 ButtonType.CANCEL,ButtonType.OK
         ).showAndWait();
 
 
+        if(result.get() == ButtonType.OK) {
+            System.out.println("Resetting everything" +
+                    "");
+            this.reset();
 
 
-        //output summary results
-        //TODO WAIT FOR JONAS
+            //EXECUTION
+
+            SimulationState simulationState = null;
 
 
+            if(simulationState != null) {
 
+                //Convert
+                UIState uiState = new UIState(simulationState);
+                this.historyManager.addNewState(uiState);
+
+
+                while (simulationState != null) {
+                    simulationState = null;
+                    this.historyManager.addNewState(new UIState(simulationState));
+                }
+
+                //SHOW UI
+                this.updateUIBasedOnNewState(this.historyManager.latestState());
+            }
+
+
+        }else{
+            //cancel
+            System.out.println("Canceled");
+
+        }
 
 
     }
@@ -223,30 +322,54 @@ public class MainWindowViewController implements Initializable {
     }
 
 
-    //TODO wanneer nog tijd voor
-    public void playHistoryBackAction(ActionEvent actionEvent) {
-        //preparing for playing historyManager
 
-    }
-
-
+    /*
+        Gets called when the system wants to start again
+     */
     public void reset() {
-        System.out.println("Resetting");
+        System.out.println("RESETTING");
+        this.historyManager.reset();
+
+
+        //reset manager
+        //TODO
+
+        //Load in XML DOC
+        System.out.println("Loading XML Document");
+        //TODO read selecion model
+
+
+
+        //reset UI
+        this.updateUIBasedOnNewState(new UIState(null));
+
+
+        //enable evetyhing again ready for use
+        this.unFreezeUI();
+        this.disableCheck();
 
     }
+
 
 
 
     //gets called when all instructions have been done
-    public void runningDone () {
-        new Alert(
+    public void runningDoneAlert () {
+        Optional<ButtonType> result = new Alert(
                 Alert.AlertType.INFORMATION,
-                "No more instuctions Left. You can restart or browse the hisotry further.",
-                ButtonType.OK
+                "No more instuctions Left. Do you wish to restart?",
+                ButtonType.NO, ButtonType.YES
         ).showAndWait();
+
+        if(result.get() == ButtonType.YES) {
+            System.out.println("Resetting everything" + "");
+            this.reset();
+        }else{
+            //do nothing
+            System.out.println("NO CALLED");
+        }
     }
 
-    //XML change Listener
 
 
 
@@ -280,19 +403,66 @@ public class MainWindowViewController implements Initializable {
     //changes the content being shown by the UI
     public void updateUIBasedOnNewState(UIState uiState) {
         if(uiState != null) {
-            //TODO IMPORTANTEEEE
+
+            if(historyManager.isPresent()) {
+                this.currentStatePane.setText("Current State");
+
+            }else{
+                this.currentStatePane.setText("Viewing History State");
+            }
+
+            //SET SUMMARY
+            this.timer.setText("Timer: " + String.valueOf(uiState.getTimerValue()));
+            this.totalAmountOfWritesToRamLabel.setText(" #Writes To Ram: " + String.valueOf(uiState.getTotalAmountOfWritesToRam()));
+            this.totalAmountsOfWritesToPercistentLabel.setText("#Writes to Percitent: " + String.valueOf(uiState.getTotalAmountOfWritesToPercistent()));
+
+            //current instruction
+            this.currentInstructionOperationLabel.setText(uiState.getCurrentInstructionOperation());
+            this.currentInstructionVirtualAdressLabel.setText(uiState.getCurrentInstructionVirtualAdress());
+            this.currentInstructionPhysicalAdressLabel.setText(uiState.getCurrentInstructionPhysicalAdress());
+            
+            this.currentInstructionProcessIdLabel.setText("Id: " + String.valueOf(uiState.getCurrentInstructionProcessId()));
+            this.currentInstructionProcessWritesToRamLabel.setText("#Writes To Ram: " + String.valueOf(uiState.getCurrentInsructionProcessNumberOfWritesToRam()));
+            this.currentInstructionProcessWritesToPercistentLabel.setText("#Writes To Percistent: " + String.valueOf(uiState.getCurrentInstructionProcessNumberOfWritesToPercistent()));
+            
+
+            //previous insruction
+
+            //check hisotryManager if there is a previous state
+            if(this.historyManager.previousState() != null) {
+                this.previousInstructionOperationLabel.setText(this.historyManager.previousState().getCurrentInstructionOperation());
+                this.previousInstructionVirtualAdressLabel.setText(this.historyManager.previousState().getCurrentInstructionVirtualAdress());
+                this.previousInstructionPhysicalAdressLabel.setText(this.historyManager.previousState().getCurrentInstructionPhysicalAdress());
+
+                this.previousInstructionProcessIdLabel.setText("Id: " +
+                        String.valueOf(this.historyManager.previousState().getCurrentInstructionProcessId()));
+                this.previousInstructionProcessWritesToRamLabel.setText("#Writes To Ram: " +
+                        String.valueOf(this.historyManager.previousState().getCurrentInsructionProcessNumberOfWritesToRam()));
+                this.previousInstructionProcessWritesToPercistentLabel.setText("#Writes To Percistent: " +
+                         String.valueOf(this.historyManager.previousState().getCurrentInstructionProcessNumberOfWritesToPercistent()));
+
+            }
+
+            //pagetable
+            this.currentPageTablePane.setText("Page Table Of Executed Process " + "<" + String.valueOf(uiState.getCurrentInstructionProcessId()) + ">");
+            this.pageTableView.fillWithData(uiState.getPageTableCells());
+
+            //ram representation
+            this.ramView.fillWithData(uiState.getRamTableCells());
+
+            //leaving progress
+            this.lastRemovedProcessIdLabel.setText(uiState.getLastProcessRemovedFromRamId());
+            this.lastRemovedProcessAmountOfWritesToRam.setText(uiState.getLastProcessRemovedFromRamNumberOfWritesToRam());
+            this.lastRemovedProcessAmountOfWritesToPercistent.setText(uiState.getLastProcessRemovedFromRamNumberOfWritesToPercistent());
+
+        }else{
+            basicFill();
         }
     }
 
-
-    public void fillRamRepresenation() {
-        //TODO
-
-    }
-
-    public void fillPageTableRepresentation() {
-        //TODO
-
+    public void basicFill() {
+        //when no data is present-
+        this.currentStatePane.setText("No Instruction executed");
     }
 
 
@@ -305,8 +475,9 @@ public class MainWindowViewController implements Initializable {
      */
 
 
-    //TODO ACTIONS  FOR  COLOR TOGGLE   -> If becomes to ewtended make color editing class etc.
 
+
+    //TODO ACTIONS  FOR  COLOR TOGGLE   -> If becomes to ewtended make color editing class etc.
     public void hideAllHighlighting() {
         //reset listviews
     }
@@ -332,13 +503,27 @@ public class MainWindowViewController implements Initializable {
     //prevent user from using History, commonly used while running algorithm
     public void freezeUI() {
         //TODO
+        this.forwardHistoryButton.setDisable(true);
+        this.backwardHistoryButton.setDisable(true);
+        this.executeNextInstructionButton.setDisable(true);
+        this.executeAllInstructionsButton.setDisable(true);
+        this.topToolBar.setDisable(true);
+
+
     }
 
     //allow user to use History again
     public void unFreezeUI() {
-        //TODO
-
+        this.forwardHistoryButton.setDisable(false);
+        this.backwardHistoryButton.setDisable(false);
+        this.executeNextInstructionButton.setDisable(false);
+        this.executeAllInstructionsButton.setDisable(false);
+        this.topToolBar.setDisable(false);
     }
+
+
+    //TODO
+    //Configure toggle buttons here
 
 
 

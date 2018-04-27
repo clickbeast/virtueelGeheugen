@@ -39,17 +39,19 @@ public class Main extends Application {
             }
         });
 
-/*
+
         Parent flowPane = loader.load();
 
         primaryStage.setTitle("Memory Simulator");
         //primaryStage.setResizable(false);
-        primaryStage.setScene(new Scene(flowPane, 1000, 750));
+        primaryStage.setScene(new Scene(flowPane, 1200, 755));
+        primaryStage.setMinWidth(800);
+        primaryStage.setMinHeight(750);
         primaryStage.show();
         this.simulationManager.setMainWindowController(mainwindow);
         mainwindow.scene = primaryStage.getScene();
         this.mainwindow.startFinished();
-*/
+
         InstructionList list = (new XMLProcessor().generateProcessListBasedOnXML("Instructions_30_3.xml"));
 
         /**
