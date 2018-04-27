@@ -125,12 +125,14 @@ public class SimulationManager {
     /**
      * Run one instruction from the list of instructions.
      */
-    public void runStep(){
+    public SimulationState runStep(){
 
         InstructionInfo instruction = instructionList.removeFirst();
         options.get(instruction.getOperation()).apply(instruction);
 
-        nextState = new SimulationState(
+        print(instruction);
+        currentTime++;
+        return new SimulationState(
                 instruction,
                 processList.get(instruction.getProcessId()),
                 removedProcess,
@@ -139,9 +141,6 @@ public class SimulationManager {
                 writesToRAM,
                 writesToPersistent
         );
-
-        print(instruction);
-        currentTime++;
     }
 //======================================================================================================================
     //debug //TODO remove
