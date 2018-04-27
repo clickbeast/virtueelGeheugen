@@ -99,6 +99,12 @@ public class PageTable extends ArrayList<PageTableEntry> {
         this.get(address).addToRAM(process.getProcessRAMInterface().add(process, address), accessTime);
     }
 
+    public void addToRAM(int address, Process process, int accessTime, int frame){
+
+        process.getProcessRAMInterface().overWrite(process, address, frame);
+        this.get(address).addToRAM(frame, accessTime);
+    }
+
     /**
      * TODO remove
      * Set a page containing a certain address as modified.
