@@ -4,16 +4,16 @@ public class RamTableData {
     //TODO
 
 
-    private String frameId;
+    private String pageNumber;
     private String processId;
 
-    public RamTableData(String frameId, String processId) {
-        this.frameId = frameId;
+    public RamTableData(String pageNumber, String processId) {
+        this.pageNumber = pageNumber;
         this.processId = processId;
     }
 
-    public String getFrameId() {
-        return frameId;
+    public String getPageNumber() {
+        return pageNumber;
     }
 
     public String getProcessId() {

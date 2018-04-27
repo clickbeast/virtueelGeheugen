@@ -406,6 +406,12 @@
                </children></VBox>
             <ToolBar prefHeight="20.0" prefWidth="1000.0" style="-fx-border-width: 1px; -fx-border-color: #B9B9B9#B9B9B9; -fx-background-color: #E2E2E2#E2E2E2;">
                <items>
+                  <Label text="Run Options:">
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Label>
+                  <ChoiceBox fx:id="pagingMethodChoiceBox" prefHeight="27.0" prefWidth="109.0" />
                   <Pane HBox.hgrow="ALWAYS" />
                   <Label text="View Options:" />
                   <Pane>

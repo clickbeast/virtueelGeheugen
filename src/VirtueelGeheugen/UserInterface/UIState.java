@@ -30,7 +30,6 @@ public class UIState {
     private String lastProcessRemovedFromRamNumberOfWritesToPercistent = "";
 
 
-
     //PageTableData
     private ArrayList<PageTableData> pageTableCells;
     private ArrayList<RamTableData> ramTableCells;
@@ -66,7 +65,7 @@ public class UIState {
 
         this.currentInstructionOperation = simulationState.getInstructionInfo().getOperation();
         this.currentInstructionVirtualAdress = String.valueOf(simulationState.getInstructionInfo().getVirtualAdressValue());
-        this.currentInstructionPhysicalAdress = "Wher oh Where";
+        this.currentInstructionPhysicalAdress = "WAITING";
 
         this.currentInstructionProcessId = simulationState.getInstructionInfo().getProcessId();
         this.currentInsructionProcessNumberOfWritesToRam = simulationState.getProcessBeingExecuted().getWriteTos();
@@ -92,7 +91,7 @@ public class UIState {
             if(frame.getProcess() != null) {
                 this.ramTableCells.add(new RamTableData(String.valueOf(frame.getPageNumber()), String.valueOf(frame.getProcess().getpId())));
             }else{
-                this.ramTableCells.add(new RamTableData("Empty",""));
+                this.ramTableCells.add(new RamTableData("",""));
             }
         }
 
