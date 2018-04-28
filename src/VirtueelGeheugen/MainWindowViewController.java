@@ -3,10 +3,7 @@ package VirtueelGeheugen;
 import VirtueelGeheugen.DataProcessing.Processing.XMLProcessor;
 import VirtueelGeheugen.Simulation.SimulationManager;
 import VirtueelGeheugen.Simulation.SimulationState;
-import VirtueelGeheugen.UserInterface.HistoryManager;
-import VirtueelGeheugen.UserInterface.PageTableView;
-import VirtueelGeheugen.UserInterface.RamView;
-import VirtueelGeheugen.UserInterface.UIState;
+import VirtueelGeheugen.UserInterface.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -27,6 +24,9 @@ public class MainWindowViewController implements Initializable {
     //handles the main simulation of the RAM etc.
     private SimulationManager simulationManager;
     private HistoryManager historyManager;
+
+    //manages color highlights inside the application
+    private HighlightManager highlightManager;
 
 
     /**
@@ -102,6 +102,8 @@ public class MainWindowViewController implements Initializable {
 
     public ToolBar bottomToolBar;
 
+    public ToggleButton highlightPages;
+    public ToggleButton highlightProcesses;
 
 
     @Override
@@ -162,6 +164,8 @@ public class MainWindowViewController implements Initializable {
         this.ramView = new RamView();
         this.pageTableView = new PageTableView();
 
+        this.highlightManager = new HighlightManager(this.pageTableView,this.ramView);
+
 
         //configure bounds
         AnchorPane.setBottomAnchor(this.pageTableView, -10.0);
@@ -182,6 +186,7 @@ public class MainWindowViewController implements Initializable {
         pagingMethodChoiceBox.getSelectionModel().selectFirst();
         pagingMethodChoiceBox.getSelectionModel().getSelectedIndex();
         this.currentSelectedXMLIndex = pagingMethodChoiceBox.getSelectionModel().getSelectedIndex();
+
 
         //configure paging method choice box
         pagingMethodChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
@@ -208,6 +213,42 @@ public class MainWindowViewController implements Initializable {
 
 
         });
+
+
+        this.configureViewOptionToggleButton();
+
+    }
+
+    public void configureViewOptionToggleButton() {
+
+        final ToggleGroup viewToggleGroup = new ToggleGroup();
+        viewToggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
+            public void changed(ObservableValue<? extends Toggle> ov, Toggle toggle, Toggle new_toggle) {
+                if (new_toggle == null) {
+                    //nothing selected
+                    highlightManager.removeHighlights();
+                }else{
+                    if(viewToggleGroup.getSelectedToggle().getUserData().equals("highlightPage")) {
+                        highlightManager.setDefault("highlightPage");
+                        highlightManager.removeHighlights();
+                        highlightManager.highlightSameFramesAndPages();
+                    }else{
+                        highlightManager.setDefault("highlightProcess");
+                        highlightManager.removeHighlights();
+                        highlightManager.highlightSameProcesses();
+                    }
+                }
+
+            }
+        });
+
+        highlightPagesButton.setUserData("highlightPage");
+        highlightPagesButton.setToggleGroup(viewToggleGroup);
+        highlightPagesButton.setSelected(true);
+
+        highlightProcessesButton.setUserData("highlightProcess");
+        highlightProcessesButton.setToggleGroup(viewToggleGroup);
+
     }
 
     //Genertates a warning when the user is about to change xml file
@@ -506,6 +547,8 @@ public class MainWindowViewController implements Initializable {
 
             //pagetable
             this.currentPageTablePane.setText("Page Table Of Executed Process " + "<" + String.valueOf(uiState.getCurrentInstructionProcessId()) + ">");
+            this.pageTableView.setProcessId(uiState.getCurrentInstructionProcessId());
+
             this.pageTableView.fillWithData(uiState.getPageTableCells());
 
             //ram representation
@@ -519,6 +562,15 @@ public class MainWindowViewController implements Initializable {
         }else{
             basicFill();
         }
+
+
+        this.highlightManager = new HighlightManager(this.pageTableView,this.ramView);
+        this.highlightForCurrentOption();
+
+    }
+
+    public void highlightForCurrentOption() {
+        this.highlightManager.highlightDefault();
     }
 
     public void basicFill() {
@@ -534,30 +586,6 @@ public class MainWindowViewController implements Initializable {
      *
      *
      */
-
-
-
-
-    //TODO ACTIONS  FOR  COLOR TOGGLE   -> If becomes to ewtended make color editing class etc.
-    public void hideAllHighlighting() {
-        //reset listviews
-    }
-
-
-    //
-    public void highlightSamePages() {
-
-    }
-
-    //
-    public void highlightSameProcesses() {
-
-    }
-
-    //
-    public void generateUniqueColor() {
-
-    }
 
 
 

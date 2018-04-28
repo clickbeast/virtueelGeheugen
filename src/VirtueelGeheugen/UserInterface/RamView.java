@@ -1,6 +1,7 @@
 package VirtueelGeheugen.UserInterface;
 
 
+import VirtueelGeheugen.UserInterface.ListObjects.HBoxRam;
 import VirtueelGeheugen.UserInterface.ListObjects.RamTableData;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -9,7 +10,7 @@ import javafx.scene.layout.Priority;
 
 import java.util.List;
 
-public class RamView extends ListView<HBox> {
+public class RamView extends ListView<HBoxRam> {
 
 
     public RamView(){
@@ -46,7 +47,7 @@ public class RamView extends ListView<HBox> {
     }
 
     private void addCellWithData(RamTableData ramTableData) {
-        HBox hbox = new HBox();
+        HBoxRam hbox = new HBoxRam();
 
         //Label config
         Label c1 = new Label(ramTableData.getProcessId());
@@ -68,8 +69,9 @@ public class RamView extends ListView<HBox> {
         hbox.getChildren().add(w1);
         hbox.getChildren().add(w2);
 
-
+        hbox.setPageIdAndProcessId(ramTableData.getPageNumber(),ramTableData.getProcessId());
         this.getItems().add(hbox);
+
     }
 
     public void reset() {

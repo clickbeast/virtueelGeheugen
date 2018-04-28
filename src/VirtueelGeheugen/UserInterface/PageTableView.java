@@ -13,6 +13,9 @@ import java.util.List;
 public class PageTableView extends ListView<HBox> {
 
 
+
+    private int processId;
+
     public PageTableView() {
         super();
         configurePageTable();
@@ -87,5 +90,13 @@ public class PageTableView extends ListView<HBox> {
         this.getItems().clear();
     }
 
+
+    public int getProcessId() {
+        return processId;
+    }
+
+    public void setProcessId(int processId) {
+        this.processId = processId;
+    }
 
 }

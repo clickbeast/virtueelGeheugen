@@ -416,8 +416,8 @@
                   <Label text="View Options:" />
                   <Pane>
                      <children>
-                        <ToggleButton mnemonicParsing="false" selected="true" text="Highlight Pages" />
-                        <ToggleButton layoutX="119.5" mnemonicParsing="false" text="Highlight Processes" />
+                        <ToggleButton fx:id="highlightPagesButton" mnemonicParsing="false" selected="true" text="Highlight Pages" />
+                        <ToggleButton fx:id="highlightProcessesButton" layoutX="119.5" mnemonicParsing="false" text="Highlight Processes" />
                      </children>
                      <padding>
                         <Insets right="5.0" />
