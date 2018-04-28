@@ -66,7 +66,7 @@ public class UIState {
 
         this.currentInstructionOperation = simulationState.getInstructionInfo().getOperation();
         this.currentInstructionVirtualAdress = String.valueOf(simulationState.getInstructionInfo().getVirtualAdressValue());
-        this.currentInstructionPhysicalAdress = "WAITING";
+        this.currentInstructionPhysicalAdress = String.valueOf(simulationState.getInstructionInfo().getPhysicalAddress());
 
         this.currentInstructionProcessId = simulationState.getInstructionInfo().getProcessId();
         this.currentInsructionProcessNumberOfWritesToRam = simulationState.getProcessBeingExecuted().getWriteTos();
