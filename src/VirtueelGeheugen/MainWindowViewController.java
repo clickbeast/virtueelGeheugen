@@ -100,6 +100,8 @@ public class MainWindowViewController implements Initializable {
     private int currentSelectedXMLIndex = 0;
     private String document;
 
+    public ToolBar bottomToolBar;
+
 
 
     @Override
@@ -190,9 +192,12 @@ public class MainWindowViewController implements Initializable {
                     switch ((int) newValue) {
                         case 0:
                             System.out.println("Changing paging method -> Prepaging");
+
+                            simulationManager.runPrePaging();
                             break;
                         case 1:
                             System.out.println("Changing paging method -> Demand Paging");
+                            simulationManager.runDemandPaging();
                             break;
                         default:
                             break;
@@ -203,8 +208,6 @@ public class MainWindowViewController implements Initializable {
 
 
         });
-
-
     }
 
     //Genertates a warning when the user is about to change xml file
@@ -364,9 +367,20 @@ public class MainWindowViewController implements Initializable {
         //TODO aan te passen
         switch (this.choiceBox.getSelectionModel().getSelectedIndex()) {
 
-            case 0: simulationManager.setInstructionList(new XMLProcessor().generateProcessListBasedOnXML("Instructions_30_3.xml"));
-            case 1: simulationManager.setInstructionList(new XMLProcessor().generateProcessListBasedOnXML("Instructions_20000_4.xml"));
-            case 2:simulationManager.setInstructionList(new XMLProcessor().generateProcessListBasedOnXML("Instructions_20000_20.xml"));
+            case 0:
+                 System.out.println("USE 30 xml file");
+                simulationManager.setInstructionList(new XMLProcessor().generateProcessListBasedOnXML("Instructions_30_3.xml"));
+                break;
+
+            case 1:
+                simulationManager.setInstructionList(new XMLProcessor().generateProcessListBasedOnXML("Instructions_20000_4.xml"));
+                break;
+            case 2:
+                simulationManager.setInstructionList(new XMLProcessor().generateProcessListBasedOnXML("Instructions_20000_20.xml"));
+                break;
+
+                default:
+                    System.out.println("deg");
         }
 
 
@@ -552,6 +566,7 @@ public class MainWindowViewController implements Initializable {
         this.executeNextInstructionButton.setDisable(true);
         this.executeAllInstructionsButton.setDisable(true);
         this.topToolBar.setDisable(true);
+        this.bottomToolBar.setDisable(true);
 
 
     }
@@ -563,6 +578,7 @@ public class MainWindowViewController implements Initializable {
         this.executeNextInstructionButton.setDisable(false);
         this.executeAllInstructionsButton.setDisable(false);
         this.topToolBar.setDisable(false);
+        this.bottomToolBar.setDisable(false);
     }
 
 
