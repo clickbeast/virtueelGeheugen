@@ -313,7 +313,6 @@ public class MainWindowViewController implements Initializable {
 
             SimulationState simulationState = this.simulationManager.runStep();
 
-
             if(simulationState != null) {
                 //Convert
                 UIState uiState = new UIState(simulationState);
@@ -322,18 +321,22 @@ public class MainWindowViewController implements Initializable {
 
                 while (simulationState != null) {
                     simulationState = this.simulationManager.runStep();
-                    this.historyManager.addNewState(new UIState(simulationState));
+                    if(simulationState != null) {
+                        this.historyManager.addNewState(new UIState(simulationState));
+                    }
                 }
 
                 //SHOW UI
                 this.updateUIBasedOnNewState(this.historyManager.latestState());
+                this.disableCheck();
+
+                System.out.println("DONE WITH RUNNING ALL");
             }
         }else{
             //cancel
             System.out.println("Canceled");
-
+            this.disableCheck();
         }
-
 
     }
 
