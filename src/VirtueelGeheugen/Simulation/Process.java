@@ -240,7 +240,7 @@ public class Process {
      * @param accessTime The current time of the clock.
      */
 
-    public void scalePagesToFit(int address, int accessTime){
+    public void scalePagesToFit(int address, int accessTime, boolean prepage){
 
         int present = pageTable.getCurrentlyInRAM();
 
@@ -255,7 +255,7 @@ public class Process {
             removePagesToMatch(present, limit);
         } else if (present < limit){
 
-            addPagesToMatch(present, limit, page, accessTime);
+            if(prepage) addPagesToMatch(present, limit, page, accessTime);
         }
     }
 

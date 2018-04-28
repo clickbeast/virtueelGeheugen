@@ -10,6 +10,7 @@ public class InstructionInfo {
 
     private String operation;
     private int virtualAdressValue;
+    private int physicalAddress;
     private int processId;
 
 
@@ -39,5 +40,7 @@ public class InstructionInfo {
         return processId;
     }
 
-
+    public void setPhysicalAddress(int physicalAddress) {
+        this.physicalAddress = physicalAddress;
+    }
 }

@@ -84,4 +84,9 @@ public class PageTableEntry {
         this.lastAccessTime = accessTime;
         this.frameNumber = frame;
     }
+
+    @Override
+    public String toString() {
+        return this.present + " : " + this.modified + " : " + this.lastAccessTime + " : " + this.frameNumber;
+    }
 }

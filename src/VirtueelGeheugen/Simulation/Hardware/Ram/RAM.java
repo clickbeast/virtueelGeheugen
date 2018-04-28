@@ -26,6 +26,9 @@ import VirtueelGeheugen.Simulation.Process;
  *     <li>
  *         A PriorityQueue of processes currently in RAM, keeping the LRU process at the front.
  *     </li>
+ *     <li>
+ *         A boolean defining which algorithm to use.
+ *     </li>
  * </ul>
  */
 
@@ -82,10 +85,10 @@ public class RAM {
     public ProcessRAMInterface getProcessToRAMInterface() {
         return processToRAMInterface;
     }
+
     public ArrayList<Frame> getFrames() {
         return frames;
     }
-
 
 //======================================================================================================================
     //public functions
@@ -101,9 +104,9 @@ public class RAM {
 
         Process removedProcess = null;
         if(!this.processList.contains(process)) removedProcess = this.addProcess(process, address, accessTime);
-        if(process.getPageTable().getCurrentlyInRAM() == 0 && prePaging){
+        if(process.getPageTable().getCurrentlyInRAM() == 0){
             process.setLimit(FRAME_COUNT / processList.size());
-            process.scalePagesToFit(address, accessTime);
+            process.scalePagesToFit(address, accessTime, prePaging);
         }
         process.write(address, accessTime);
         return removedProcess;
@@ -120,9 +123,9 @@ public class RAM {
 
         Process removedProcess = null;
         if(!this.processList.contains(process)) removedProcess = this.addProcess(process, address, accessTime);
-        if(process.getPageTable().getCurrentlyInRAM() == 0 && prePaging){
+        if(process.getPageTable().getCurrentlyInRAM() == 0){
             process.setLimit(FRAME_COUNT / processList.size());
-            process.scalePagesToFit(address, accessTime);
+            process.scalePagesToFit(address, accessTime, prePaging);
         }
         process.read(address, accessTime);
         return removedProcess;
@@ -138,7 +141,7 @@ public class RAM {
         if(processList.contains(process)) processList.remove(process);
         for(Process RAMProcess: processList){
             RAMProcess.setLimit(FRAME_COUNT / processList.size());
-            RAMProcess.scalePagesToFit(-1, accessTime);
+            RAMProcess.scalePagesToFit(-1, accessTime, prePaging);
         }
     }
 
@@ -148,7 +151,7 @@ public class RAM {
      * </p>
      *
      * <p>
-     *     Calls scalePages(int address, int accessTime) to reorganise the RAM.
+     *     Calls scalePages(int address, int accessTime) to reorganise the RAM if prepaging is used.
      * </p>
      *
      * @param process    Process to be added.
@@ -169,12 +172,10 @@ public class RAM {
         //add process
         processList.add(process);
         process.setLimit(FRAME_COUNT / processList.size());
-        if(prePaging) {
-            for (Process RAMProcess : processList) {
-                if (RAMProcess != process) {
-                    RAMProcess.setLimit(FRAME_COUNT / processList.size());
-                    RAMProcess.scalePagesToFit(-1, accessTime);
-                }
+        for (Process RAMProcess : processList) {
+            if (RAMProcess != process) {
+                RAMProcess.setLimit(FRAME_COUNT / processList.size());
+                RAMProcess.scalePagesToFit(-1, accessTime, prePaging);
             }
         }
 

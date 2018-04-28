@@ -4,6 +4,8 @@ import VirtueelGeheugen.DataProcessing.Containers.InstructionInfo;
 import VirtueelGeheugen.DataProcessing.Containers.InstructionList;
 import VirtueelGeheugen.Interfaces.SimulationInterface;
 import VirtueelGeheugen.MainWindowViewController;
+import VirtueelGeheugen.Simulation.Hardware.PageTable.PageTable;
+import VirtueelGeheugen.Simulation.Hardware.PageTable.PageTableEntry;
 import VirtueelGeheugen.Simulation.Hardware.Ram.Frame;
 import VirtueelGeheugen.Simulation.Hardware.Ram.RAM;
 
@@ -11,6 +13,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
+
+import static VirtueelGeheugen.Simulation.Hardware.PageTable.PageTable.getOffset;
+import static VirtueelGeheugen.Simulation.Hardware.PageTable.PageTable.translateAddressToPage;
 
 public class SimulationManager {
 //======================================================================================================================
@@ -121,30 +126,24 @@ public class SimulationManager {
     }
 
     /**
-     * Run entire XML file at once and display results at the end.
-     */
-    public void runComplete(){
-
-        Long start = System.currentTimeMillis();
-        System.out.println(start);
-        while(!instructionList.isEmpty()) runStep();
-        System.out.println(System.currentTimeMillis() - start);
-    }
-
-    /**
      * Run one instruction from the list of instructions.
      */
     public SimulationState runStep(){
 
         try {
+
             InstructionInfo instruction = instructionList.removeFirst();
             options.get(instruction.getOperation()).apply(instruction);
-
-            print(instruction);
             currentTime++;
+
+            Process running = processList.get(instruction.getProcessId());
+            int offset = getOffset(instruction.getVirtualAdressValue());
+            instruction.setPhysicalAddress(
+                    offset + running.getPageTable().get(translateAddressToPage(instruction.getVirtualAdressValue())).getFrameNumber() * 4096
+            );
             return new SimulationState(
                     instruction,
-                    processList.get(instruction.getProcessId()),
+                    running,
                     removedProcess,
                     ram.getFrames(),
                     getCurrentTime(),
@@ -157,36 +156,5 @@ public class SimulationManager {
             System.out.println(writesToPersistent);
             return null;
         }
-    }
-//======================================================================================================================
-    //debug //TODO remove
-
-    private void print(InstructionInfo instructionInfo){
-
-        System.out.println("instruction:");
-        System.out.println("\tprocess id: " + instructionInfo.getProcessId() + " | instruction code : " + instructionInfo.getOperation() + " | address: " + instructionInfo.getVirtualAdressValue());
-
-        System.out.println();
-        System.out.print("\t\t");
-        for(int i = 0; i < ram.getFrames().size(); i++){
-            System.out.print(i + "\t");
-        }
-        System.out.println();
-        System.out.print("pid: \t");
-        for(Frame frame: ram.getFrames()){
-            try {
-                System.out.print(frame.getProcess().getpId() + "\t");
-            } catch (NullPointerException e){
-                System.out.print("\t");
-            }
-        }
-        System.out.println();
-        System.out.print("page: \t");
-        for(Frame frame: ram.getFrames()){
-            System.out.print(frame.getPageNumber() + "\t");
-        }
-
-        System.out.println();
-        System.out.println("==============================================================");
     }
 }
