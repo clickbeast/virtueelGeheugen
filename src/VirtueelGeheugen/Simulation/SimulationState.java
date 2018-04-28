@@ -7,8 +7,7 @@ import java.util.ArrayList;
 
 
 /**
- *
- * Contains needed variables that are usefull to the userInterface
+ * Contains needed variables that are useful to the userInterface
  */
 public class SimulationState {
 
@@ -31,7 +30,7 @@ public class SimulationState {
         this.writeToPersistent = writeToPersistent;
     }
 //======================================================================================================================
-    //getters
+    //needed getters & setters
 
     public InstructionInfo getInstructionInfo() {
         return instructionInfo;
@@ -60,7 +59,4 @@ public class SimulationState {
     public int getWriteToPersistent() {
         return writeToPersistent;
     }
-
-//======================================================================================================================
-    //setters
 }

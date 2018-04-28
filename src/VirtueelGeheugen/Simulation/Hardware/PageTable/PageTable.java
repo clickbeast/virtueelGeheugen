@@ -19,7 +19,8 @@ public class PageTable extends ArrayList<PageTableEntry> {
     //public methods
 
     /**
-     * TODO
+     * Gets the last time the process to which this table belongs was used.
+     *
      * @return The clock time of the last used page.
      */
     public int getLastUsed(){
@@ -27,6 +28,9 @@ public class PageTable extends ArrayList<PageTableEntry> {
         return getLastUsedPage().getLastAccessTime();
     }
 
+    /**
+     * @return The last page used by the process=.
+     */
     public PageTableEntry getLastUsedPage(){
 
         PageTableEntry max = null;
@@ -89,7 +93,7 @@ public class PageTable extends ArrayList<PageTableEntry> {
      *     </li>
      * </ul>
      *
-     * @param address    Adress of the instruction being executed.
+     * @param address    Adrdess of the instruction being executed.
      * @param process    The process owning this page table.
      * @param accessTime The current clock time.
      *
@@ -99,33 +103,38 @@ public class PageTable extends ArrayList<PageTableEntry> {
         this.get(address).addToRAM(process.getProcessRAMInterface().add(process, address), accessTime);
     }
 
+    /**
+     * Used to swap 2 pages from the same process. Other functions same as addToRAM(int address, Process process, int accessTime)
+     *
+     * @param address    Adrdess of the instruction being executed.
+     * @param process    The process owning this page table.
+     * @param accessTime The current clock time.
+     * @param frame      The frame of the page to be replaced.
+     */
     public void addToRAM(int address, Process process, int accessTime, int frame){
 
         process.getProcessRAMInterface().overWrite(process, address, frame);
         this.get(address).addToRAM(frame, accessTime);
     }
-
-    /**
-     * TODO remove
-     * Set a page containing a certain address as modified.
-     *
-     * @param address Address in a certain page.
-     */
-    @Deprecated
-    public void setPageTableAsModified(int address, int accessTime){
-
-        PageTableEntry entry = this.get(translateAddressToPage(address));
-        entry.setModified(true);
-        entry.setLastAccessTime(accessTime);
-
-    }
 //======================================================================================================================
     //private functions
 
+    /**
+     * Translate a virtual address to a page number.
+     *
+     * @param address The virtual address.
+     * @return        Corresponding page number.
+     */
     public static int translateAddressToPage(int address){
         return address / PAGE_SIZE;
     }
 
+    /**
+     * Gets the offset of the address within a page.
+     *
+     * @param address The virtual address.
+     * @return        The offset.
+     */
     public static int getOffset(int address){
         return address % PAGE_SIZE;
     }

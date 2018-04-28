@@ -146,13 +146,8 @@ public class RAM {
     }
 
     /**
-     * <p>
-     *      Adding a process to the list. Used when process instruction is called.
-     * </p>
-     *
-     * <p>
-     *     Calls scalePages(int address, int accessTime) to reorganise the RAM if prepaging is used.
-     * </p>
+     * Adding a process to the list. Used when process instruction is called.
+     * Calls scalePages(int address, int accessTime, boolean repage).
      *
      * @param process    Process to be added.
      * @param address    The address that has to be moved to RAM.
@@ -183,9 +178,7 @@ public class RAM {
     }
 
     /**
-     * <p>
-     *     Method to set the information of a certain frame.
-     * </p>
+     * Method to set the information of a certain frame.
      *
      * @param process    The process reference to be added to the Frame.
      * @param pageNumber The page number of the page being added.
@@ -204,9 +197,7 @@ public class RAM {
     }
 
     /**
-     * <p>
-     *     Method to remove one frame from the RAM.
-     * </p>
+     * Method to remove one frame from the RAM.
      *
      * @param frame The frame that has to be removed.
      */

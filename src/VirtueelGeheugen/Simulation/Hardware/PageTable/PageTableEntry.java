@@ -57,9 +57,7 @@ public class PageTableEntry {
     //public methods
 
     /**
-     * <p>
-     *     When a page is added to RAM, do:
-     * </p>
+     * When a page is added to RAM, do:
      * <ul>
      *     <li>
      *         Set the present bit to 1 (true).

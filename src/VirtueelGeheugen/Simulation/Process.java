@@ -9,12 +9,12 @@ import jdk.nashorn.internal.ir.annotations.Ignore;
 import static VirtueelGeheugen.Simulation.Hardware.PageTable.PageTable.translateAddressToPage;
 
 /**
- * <pre>
+ * <p>
  *     A model representing a process. Each process is assumed to be able to have 16 pages and will get a page table
  *     to facilitate 16 pages.
  *
- *     Each process contains.
- * </pre>
+ *     Each process contains:
+ * </p>
  *
  * <ul>
  *     <li>
@@ -120,18 +120,17 @@ public class Process {
     //private functions
 
     /**
-     * Method to add pages until the entire allocated in the ram is filled.
+     * Method to add pages until the process completely fills it's allowed space.
      *
      * @param present    The amount of pages currently present.
-     * @param pageCount  The amount of pages that has to be matched.
      * @param address    The address of the page that has to be put in RAM
      * @param accessTime The current time of the clock.
      */
-    private void addPagesToMatch(int present, int pageCount, int address, int accessTime){
+    private void addPagesToMatch(int present, int address, int accessTime){
 
         int page = translateAddressToPage(address);
 
-        while (present < pageCount) {
+        while (present < limit) {
 
             if(!pageTable.get(page).isPresent()) {
                 addPage(page, accessTime, -1);
@@ -147,11 +146,10 @@ public class Process {
      * Method to remove pages until the amount of pages currently in RAM does no longer exceed the allowed limit.
      *
      * @param present    The amount of pages currently present.
-     * @param pageCount  The amount of pages that has to be matched.
      */
-    private void removePagesToMatch(int present, int pageCount){
+    private void removePagesToMatch(int present){
 
-        while (present > pageCount) {
+        while (present > limit) {
 
             removePage();
             present--;
@@ -159,14 +157,8 @@ public class Process {
     }
 
     /**
-     * <p>
-     *     remove the LRY page from RAM.
-     * </p>
-     *
-     * <p>
-     *     Increase the amount of pages written back to the persistent memory if the page has been changed while it
-     *     was in RAM.
-     * </p>
+     * remove the LRU page from RAM. Increase the amount of pages written back to the persistent memory if the page has
+     * been changed while it was in RAM.
      */
     private int removePage(){
 
@@ -193,6 +185,13 @@ public class Process {
         else pageTable.addToRAM(page, this, accessTime, frame);
     }
 
+    /**
+     * Used with a read or write to get a page from RAM or move it to RAM if it is not in RAM.
+     *
+     * @param address    The address the page has to contain.
+     * @param accessTime The current clock time.
+     * @return           The PageTableEntry for that page.
+     */
     private PageTableEntry accessPage(int address, int accessTime){
 
         int page = translateAddressToPage(address);
@@ -222,19 +221,10 @@ public class Process {
     }
 
     /**
-     * <p>
-     *     Sets how many pages of the given process are currently in RAM. If 0 is specified all pages will be removed from
-     *     RAM.
-     * </p>
-     *
-     * <p>
-     *     If there are too many pages currently in RAM, the excess will will be removed from RAM. Otherwise pages will
-     *     be added that follow the last used page.
-     * </p>
-     *
-     * <p>
-     *     If a page is newly added to the RAM, the time it was last accessed is set to the current clock time.
-     * </p>
+     * Sets how many pages of the given process are currently in RAM. If 0 is specified all pages will be removed from
+     * RAM. If there are too many pages currently in RAM, the excess will will be removed from RAM. Otherwise pages will
+     * be added that follow the last used page. If a page is newly added to the RAM, the time it was last accessed is
+     * set to the current clock time.
      *
      * @param address    The address in the first page that has to be put in RAM.
      * @param accessTime The current time of the clock.
@@ -252,10 +242,10 @@ public class Process {
         if (present >= limit) {
 
             //remove enough pages to make room for 1 more.
-            removePagesToMatch(present, limit);
+            removePagesToMatch(present);
         } else if (present < limit){
 
-            if(prepage) addPagesToMatch(present, limit, page, accessTime);
+            if(prepage) addPagesToMatch(present, page, accessTime);
         }
     }
 
@@ -279,7 +269,7 @@ public class Process {
     /**
      * Call when a write operation occurs.
      *
-     * @param address Addreess to be written to.
+     * @param address    Address to be written to.
      * @param accessTime The current clock time.
      */
     public void write(int address, int accessTime){
@@ -290,7 +280,7 @@ public class Process {
     /**
      * Call when a read operation occurs.
      *
-     * @param address Addreess to be read from.
+     * @param address    Address to be read from.
      * @param accessTime The current clock time.
      */
     public void read(int address, int accessTime){

@@ -4,9 +4,6 @@ import VirtueelGeheugen.DataProcessing.Containers.InstructionInfo;
 import VirtueelGeheugen.DataProcessing.Containers.InstructionList;
 import VirtueelGeheugen.Interfaces.SimulationInterface;
 import VirtueelGeheugen.MainWindowViewController;
-import VirtueelGeheugen.Simulation.Hardware.PageTable.PageTable;
-import VirtueelGeheugen.Simulation.Hardware.PageTable.PageTableEntry;
-import VirtueelGeheugen.Simulation.Hardware.Ram.Frame;
 import VirtueelGeheugen.Simulation.Hardware.Ram.RAM;
 
 import java.util.ArrayList;
@@ -30,11 +27,6 @@ public class SimulationManager {
         @Override
         public void writeToPersistent() {
             writesToPersistent++;
-        }
-
-        @Override
-        public void addressTranslated(int physicalAddress){
-
         }
     };
 //======================================================================================================================
@@ -109,9 +101,6 @@ public class SimulationManager {
         return currentTime;
     }
 
-    public ArrayList<Process> getProcessList() {
-        return processList;
-    }
 //======================================================================================================================
     //private functions
 //======================================================================================================================
@@ -154,6 +143,8 @@ public class SimulationManager {
             System.out.println("=========================================");
             System.out.println(writesToRAM);
             System.out.println(writesToPersistent);
+
+            //return null reference ar end of list, necessary for UI.
             return null;
         }
     }
