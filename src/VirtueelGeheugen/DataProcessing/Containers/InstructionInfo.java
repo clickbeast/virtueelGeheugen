@@ -27,6 +27,9 @@ public class InstructionInfo {
         this.processId = instructionInfo.processId;
     }
 
+    public int getPhysicalAddress() {
+        return physicalAddress;
+    }
 
     public String getOperation() {
         return operation;

@@ -110,7 +110,6 @@ public class HighlightManager {
         System.out.println(index);
         //eerste overslagen beceause of placehgolder cell
         for(HBox hbox: this.pageTableView.getItems()) {
-            System.out.println(color);
             if(index == indexPage) {
                 hbox.setStyle("-fx-background-color:" + color + ";" + "-fx-background-radius: 4");
                 //hbox.setStyle("-fx-background-radius: 4");
@@ -130,6 +129,7 @@ public class HighlightManager {
     }
 
     public void setDefault(String aDefault) {
+        System.out.println("setting defalt highlitgh: " + aDefault);
         this.aDefault = aDefault;
     }
 
@@ -143,5 +143,9 @@ public class HighlightManager {
             this.removeHighlights();
         }
 
+    }
+
+    public String getaDefault() {
+        return aDefault;
     }
 }

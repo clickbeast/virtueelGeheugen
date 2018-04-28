@@ -123,7 +123,7 @@ public class MainWindowViewController implements Initializable {
         System.out.println("Configuring UI Elements");
 
         //configure xml select button
-        choiceBox.setItems(FXCollections.observableArrayList("30 Instructies","20000_4 Instructies","20 000_20 Instructies"));
+        choiceBox.setItems(FXCollections.observableArrayList("30 Instructies","20000_4 Instructies","20000_20 Instructies"));
         choiceBox.getSelectionModel().selectFirst();
         choiceBox.getSelectionModel().getSelectedIndex();
         this.currentSelectedXMLIndex = choiceBox.getSelectionModel().getSelectedIndex();
@@ -152,12 +152,7 @@ public class MainWindowViewController implements Initializable {
                             break;
                     }
                 }
-
-
             }
-
-
-
 
         });
 
@@ -208,10 +203,6 @@ public class MainWindowViewController implements Initializable {
                             break;
                     }
             }
-
-
-
-
         });
 
 
@@ -564,12 +555,14 @@ public class MainWindowViewController implements Initializable {
         }
 
 
-        this.highlightManager = new HighlightManager(this.pageTableView,this.ramView);
         this.highlightForCurrentOption();
 
     }
 
     public void highlightForCurrentOption() {
+        String oldDef = this.highlightManager.getaDefault();
+        this.highlightManager = new HighlightManager(this.pageTableView,this.ramView);
+        this.highlightManager.setDefault(oldDef);
         this.highlightManager.highlightDefault();
     }
 
@@ -611,11 +604,6 @@ public class MainWindowViewController implements Initializable {
         this.topToolBar.setDisable(false);
         this.bottomToolBar.setDisable(false);
     }
-
-
-    //TODO
-    //Configure toggle buttons here
-
 
 
     /**
