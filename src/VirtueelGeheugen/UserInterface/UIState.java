@@ -48,9 +48,10 @@ public class UIState {
         this.ramTableCells = new ArrayList<>();
 
         //Process simulation state
-        processSimulationState(simulationState);
+        if(simulationState != null) {
+            processSimulationState(simulationState);
+        }
     }
-
 
 
     public void processSimulationState(SimulationState simulationState) {
