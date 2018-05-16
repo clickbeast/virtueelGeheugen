@@ -27,7 +27,7 @@ public class HistoryManager  {
     //adds a new state
     public void addNewState(UIState state) {
 
-        System.out.println("ADDING NEW STATE TO HISTORY");
+        //System.out.println("ADDING NEW STATE TO HISTORY");
         previousStates.add(state);
         //set back to the present
         this.backToPresent();
@@ -40,10 +40,10 @@ public class HistoryManager  {
 
 
     public void backToPresent() {
-        System.out.println("Current Size:"  + this.previousStates.size());
+        //System.out.println("Current Size:"  + this.previousStates.size());
         currentIndex = this.previousStates.size() - 1;
 
-        System.out.println("Current Index:" + this.currentIndex);
+        //System.out.println("Current Index:" + this.currentIndex);
     }
 
     public UIState latestState() {
@@ -67,19 +67,19 @@ public class HistoryManager  {
     //gives back the previous state
     public UIState goToPreviousState() {
 
-        System.out.println("PREVIOUS STATE DEMANDED");
+        //System.out.println("PREVIOUS STATE DEMANDED");
 
         if(this.previousStates.size() == 0) {
             return  null;
         }
 
         if(this.currentIndex - 1 >= 0) {
-            System.out.println("Current Index:" + this.currentIndex);
+            //System.out.println("Current Index:" + this.currentIndex);
 
             this.currentIndex = this.currentIndex - 1;
         }
 
-        System.out.println("GETTting previous state with index + " + this.currentIndex);
+        //System.out.println("GETTting previous state with index + " + this.currentIndex);
 
 
         return this.previousStates.get(this.currentIndex);
@@ -87,9 +87,9 @@ public class HistoryManager  {
 
 
     public UIState accessPreviousState() {
-        System.out.println("ACCESSING PREVIOUS STATE");
+        //System.out.println("ACCESSING PREVIOUS STATE");
         if(this.currentIndex - 1 >= 0) {
-            System.out.println("Current Index:" + this.currentIndex);
+            //System.out.println("Current Index:" + this.currentIndex);
             return this.previousStates.get(this.currentIndex - 1);
         }
 
@@ -98,17 +98,17 @@ public class HistoryManager  {
 
 
     public boolean isFirstState() {
-    System.out.println("CHECKING IS FIRST STATE");
-        System.out.println(currentIndex);
+        //System.out.println("CHECKING IS FIRST STATE");
+        //System.out.println(currentIndex);
         return currentIndex == 0;
     }
 
     public boolean isLastState() {
-        System.out.println("checking is last state->" + currentIndex);
-        System.out.println(this.previousStates.size() - 1);
+        //System.out.println("checking is last state->" + currentIndex);
+        //System.out.println(this.previousStates.size() - 1);
 
         if(currentIndex == this.previousStates.size()-1) {
-            System.out.println("YUP");
+            //System.out.println("YUP");
             return true;
         }
 
